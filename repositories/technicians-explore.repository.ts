@@ -42,7 +42,7 @@ export async function searchTechnicians(
     JOIN service_categories c ON ts.category_id = c.id
   `;
 
-  const params: any[] = [lat, lng, lat];
+  const params: (number | string)[] = [lat, lng, lat];
 
   if (categoryId) {
     query += ` WHERE tp.is_available = TRUE AND ts.category_id = ? `;
@@ -60,7 +60,6 @@ export async function searchTechnicians(
     params.push(`%${term}%`, `%${term}%`, `%${term}%`);
   }
   query += ` AND u.status = 'active' AND c.is_active = 1
-    GROUP BY ts.id
     HAVING distance <= tp.service_radius_km
     ORDER BY distance ASC
   `;

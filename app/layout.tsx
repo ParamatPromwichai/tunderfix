@@ -62,6 +62,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="th"
+      data-scroll-behavior="smooth"
       className={`${geistSans.variable} ${geistMono.variable} ${thaiSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
