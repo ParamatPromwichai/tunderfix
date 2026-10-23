@@ -3,11 +3,11 @@
 -- MySQL 8.0+
 -- ============================================================
 
-CREATE DATABASE IF NOT EXISTS technician_finder_simple
+CREATE DATABASE IF NOT EXISTS thunderfix
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
-USE technician_finder_simple;
+USE thunderfix;
 
 -- 1. ผู้ใช้ทุกประเภท: customer, technician, admin
 CREATE TABLE IF NOT EXISTS users (

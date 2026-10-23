@@ -1,33 +1,40 @@
+import { createHash } from "node:crypto";
 import mysql, { type Pool } from "mysql2/promise";
 
-import { getServerEnv } from "@/lib/validations";
+import { getDatabaseOptions } from "@/lib/database-config.mjs";
 
 const globalForDatabase = globalThis as unknown as {
   mysqlPool?: Pool;
+  mysqlPoolConfig?: string;
 };
 
-function createPool(): Pool {
-  const env = getServerEnv();
+const options = {
+  ...getDatabaseOptions(),
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  enableKeepAlive: true,
+  supportBigNumbers: true,
+  bigNumberStrings: true,
+};
+const configKey = createHash("sha256")
+  .update(JSON.stringify(options))
+  .digest("hex");
+const cachedPool = globalForDatabase.mysqlPool;
+const canReusePool = cachedPool && globalForDatabase.mysqlPoolConfig === configKey;
 
-  return mysql.createPool({
-    host: env.DB_HOST,
-    user: env.DB_USER,
-    password: env.DB_PASSWORD,
-    database: env.DB_NAME,
-    port: env.DB_PORT,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-    enableKeepAlive: true,
-    supportBigNumbers: true,
-    bigNumberStrings: true,
+// Hot reload must not retain an insecure pool or credentials from an older .env.
+if (cachedPool && !canReusePool) {
+  void cachedPool.end().catch(() => {
+    console.warn("Could not close the previous database pool.");
   });
 }
 
-export const db: Pool = globalForDatabase.mysqlPool ?? createPool();
+export const db: Pool = canReusePool ? cachedPool : mysql.createPool(options);
 
 if (process.env.NODE_ENV !== "production") {
   globalForDatabase.mysqlPool = db;
+  globalForDatabase.mysqlPoolConfig = configKey;
 }
 
 export async function testDatabaseConnection(): Promise<void> {

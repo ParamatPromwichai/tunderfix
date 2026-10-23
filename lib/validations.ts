@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { databaseEnvSchema, getDatabaseEnv } from "@/lib/database-config.mjs";
+
 export const userRoleSchema = z.enum(["customer", "technician", "admin"]);
 export type UserRole = z.infer<typeof userRoleSchema>;
 
@@ -39,12 +41,7 @@ export const loginSchema = z.object({
 
 export type LoginInput = z.infer<typeof loginSchema>;
 
-const serverEnvSchema = z.object({
-  DB_HOST: z.string().trim().min(1).default("localhost"),
-  DB_USER: z.string().trim().min(1).default("root"),
-  DB_PASSWORD: z.string().default(""),
-  DB_NAME: z.string().trim().min(1).default("technician_finder_simple"),
-  DB_PORT: z.coerce.number().int().min(1).max(65_535).default(3306),
+const serverEnvSchema = databaseEnvSchema.extend({
   JWT_SECRET: z.string().min(1),
 });
 
@@ -52,11 +49,7 @@ export type ServerEnv = z.infer<typeof serverEnvSchema>;
 
 export function getServerEnv(): ServerEnv {
   return serverEnvSchema.parse({
-    DB_HOST: process.env.DB_HOST,
-    DB_USER: process.env.DB_USER,
-    DB_PASSWORD: process.env.DB_PASSWORD,
-    DB_NAME: process.env.DB_NAME,
-    DB_PORT: process.env.DB_PORT,
+    ...getDatabaseEnv(),
     JWT_SECRET: process.env.JWT_SECRET,
   });
 }

@@ -1,12 +1,9 @@
 import mysql from "mysql2/promise";
 import { readFile } from "node:fs/promises";
+import { getDatabaseOptions } from "../lib/database-config.mjs";
 
 const connection = await mysql.createConnection({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME || "technician_finder_simple",
-  port: Number(process.env.DB_PORT || 3306),
+  ...getDatabaseOptions(),
   multipleStatements: true,
 });
 try {
