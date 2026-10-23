@@ -12,6 +12,14 @@
 
 Production: `npm run build` ตามด้วย `npm start` ฟอนต์ Noto Sans Thai และ Geist จะดาวน์โหลดขณะ build และเสิร์ฟจากเว็บเอง
 
+## ติดตั้งเป็นแอป (PWA)
+
+เปิดเว็บผ่าน HTTPS แล้วไปที่หน้าเข้าสู่ระบบหรือหน้าโปรไฟล์ของทั้งสอง role เลือก “ติดตั้งแอป” เมื่อ Chrome/Edge พร้อมติดตั้ง หรือเลือก “วิธีติดตั้ง” เพื่อดูขั้นตอน สำหรับ iPhone/iPad ใช้ Safari → แชร์ → เพิ่มไปยังหน้าจอโฮม เปิดแอปแล้วจะเข้าหน้าตามบัญชีที่เข้าสู่ระบบไว้
+
+Service Worker ลงทะเบียนเฉพาะ production build หรือ `next start` บน localhost ใช้ `npm run test:pwa` ตรวจ manifest, ไอคอน และพฤติกรรมแคช เมื่อแก้เนื้อหาใน `public/offline.html` หรือ `public/pwa/offline.js` ให้เพิ่มเวอร์ชัน `CACHE_NAME` ใน `public/sw.js` เพื่อให้ผู้ใช้ได้รับไฟล์ใหม่ ไอคอนสร้างจาก `public/icons/thunderfix.svg` ด้วย `node scripts/generate-pwa-icons.mjs`
+
+โหมดออฟไลน์แสดงหน้ารอการเชื่อมต่อ โดยแคชเฉพาะหน้านี้กับไฟล์ประกอบ ไม่แคช API, โปรไฟล์, รูปส่วนตัว, งาน, แชต หรือแผนที่ และไม่เก็บคำขอส่งย้อนหลัง เมื่อมี Service Worker เวอร์ชันใหม่ ผู้ใช้เลือก “อัปเดต” เพื่อโหลดหน้าใหม่ได้เอง PWA ส่วนนี้ยังไม่รวม Web Push ขณะปิดแอป
+
 ## TiDB Cloud และ ID หลังนำเข้าฐานข้อมูล
 
 โค้ดรองรับ `DB_USERNAME` แทน `DB_USER` และ `DB_DATABASE` แทน `DB_NAME` พร้อมเปิด TLS และตรวจใบรับรองอัตโนมัติสำหรับ `*.tidbcloud.com` บน Vercel ให้ตั้งตัวแปรใน Project Settings → Environment Variables และ deploy โค้ดล่าสุดหลังแก้ไข

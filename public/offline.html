@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f7f7f2" />
+    <title>กำลังรอการเชื่อมต่อ | ThunderFix</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100svh;
+        background: #f7f7f2;
+        color: #242823;
+        font-family: system-ui, sans-serif;
+        display: grid;
+        place-items: center;
+        padding: 28px 22px;
+      }
+      main {
+        width: 100%;
+        max-width: 420px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 25px;
+        letter-spacing: -1px;
+        font-weight: 750;
+      }
+      .brand img {
+        width: 38px;
+        height: 38px;
+      }
+      .brand span {
+        color: #be411e;
+      }
+      .signal {
+        margin: 56px 0 24px;
+        width: 72px;
+        height: 72px;
+        border: 1px solid #dce1d5;
+        border-radius: 18px;
+        display: grid;
+        place-items: center;
+        background: #edf0e7;
+        color: #4c6640;
+      }
+      .signal svg {
+        width: 34px;
+        height: 34px;
+      }
+      small {
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: #6b7564;
+        font-weight: 650;
+      }
+      h1 {
+        font-size: clamp(25px, 6vw, 32px);
+        line-height: 1.45;
+        letter-spacing: -0.7px;
+        margin: 12px 0;
+      }
+      p {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #687062;
+        margin: 12px 0 28px;
+      }
+      button {
+        width: 100%;
+        min-height: 52px;
+        background: #be411e;
+        border: 0;
+        border-radius: 9px;
+        color: white;
+        font:
+          650 16px system-ui,
+          sans-serif;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #a93618;
+      }
+      button:focus-visible {
+        outline: 3px solid #33684e;
+        outline-offset: 4px;
+      }
+      .note {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        border-top: 1px solid #dfe3d8;
+        margin-top: 28px;
+        padding-top: 18px;
+        color: #687062;
+        font-size: 13px;
+      }
+      .dot {
+        height: 7px;
+        width: 7px;
+        border-radius: 50%;
+        background: #be411e;
+        flex-shrink: 0;
+      }
+      .online .dot {
+        background: #33684e;
+      }
+      @media (max-height: 650px) {
+        .signal {
+          margin-top: 28px;
+        }
+        p {
+          margin-bottom: 20px;
+        }
+      }
+    </style>
+    <script src="/pwa/offline.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <div class="brand">
+        <img
+          src="/icons/thunderfix.svg"
+          alt=""
+          width="38"
+          height="38"
+        />thunderfix<span>.</span>
+      </div>
+      <div class="signal" aria-hidden="true">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        >
+          <path
+            d="m2 2 20 20M8.5 16.5a5 5 0 0 1 7 0M5 12a10 10 0 0 1 5-2.5M15 10a10 10 0 0 1 4 2M2 8a15 15 0 0 1 4-2M10 4.5A15 15 0 0 1 22 8"
+          />
+          <circle cx="12" cy="20" r=".7" fill="currentColor" stroke="none" />
+        </svg>
+      </div>
+      <small>THUNDERFIX · CONNECTION</small>
+      <h1>ขณะนี้ยังเชื่อมต่อไม่ได้</h1>
+      <p>
+        เชื่อมต่ออินเทอร์เน็ตเพื่อเรียกช่าง ส่งข้อความ และติดตามสถานะงานล่าสุด
+        แล้วลองอีกครั้ง
+      </p>
+      <button id="retry" type="button">ลองเชื่อมต่ออีกครั้ง</button>
+      <div class="note" id="network-state" role="status">
+        <span class="dot" aria-hidden="true"></span
+        ><span id="network-label">กำลังรอการเชื่อมต่อ</span>
+      </div>
+    </main>
+  </body>
+</html>

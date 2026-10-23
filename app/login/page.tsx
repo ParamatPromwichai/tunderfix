@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, Check, Zap } from "lucide-react";
 import { Brand } from "@/components/Brand";
 import { LoginForm } from "./login-form";
+import { InstallAppCard } from "@/components/InstallAppCard";
 export const metadata = { title: "เข้าสู่ระบบ | ThunderFix" };
 export default async function LoginPage({
   searchParams,
@@ -45,6 +46,7 @@ export default async function LoginPage({
           <ArrowLeft size={16} /> กลับหน้าแรก
         </Link>
         <LoginForm joiningAsTechnician={join === "technician"} />
+        <InstallAppCard />
       </div>
     </main>
   );

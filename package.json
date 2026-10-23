@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test:pwa": "node scripts/qa-pwa.mjs",
     "db:migrate:dispatch": "node --env-file=.env scripts/migrate-dispatch.mjs",
     "db:migrate:avatars": "node --env-file=.env scripts/migrate-avatars.mjs",
     "db:repair:tidb-ids": "node --env-file=.env scripts/repair-tidb-identities.mjs",

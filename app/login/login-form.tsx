@@ -80,13 +80,17 @@ export function LoginForm({
       const accountRole = result.data?.user?.role;
       const next = new URLSearchParams(window.location.search).get("next");
       const base = `/dashboard/${accountRole}`;
+      const appLaunch =
+        next && /^\/launch(?:\?action=(?:urgent|jobs|chat))?$/.test(next);
       router.push(
         accountRole === "customer" || accountRole === "technician"
-          ? next &&
-            (next === base || next.startsWith(`${base}/`)) &&
-            !/[\\\r\n]/.test(next)
+          ? appLaunch
             ? next
-            : base
+            : next &&
+                (next === base || next.startsWith(`${base}/`)) &&
+                !/[\\\r\n]/.test(next)
+              ? next
+              : base
           : "/",
       );
       router.refresh();
