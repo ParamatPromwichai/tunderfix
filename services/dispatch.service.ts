@@ -1,3 +1,4 @@
+import { executeInsert } from "@/lib/database-insert";
 import type {
   PoolConnection,
   RowDataPacket,
@@ -148,7 +149,8 @@ export async function publishUrgentJob(userId: string, input: UrgentJobInput) {
     );
     if (!categories.length)
       throw new DispatchError("กรุณาเลือกประเภทงานที่เปิดให้บริการ", 400);
-    const [result] = await c.execute<ResultSetHeader>(
+    const [result] = await executeInsert(
+      c,
       `INSERT INTO jobs (customer_id, category_id, title, description, address_text, latitude, longitude, budget_max) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         userId,
@@ -211,11 +213,13 @@ export async function submitUrgentOffer(userId: string, input: OfferInput) {
     );
     if (existing.length)
       throw new DispatchError("ส่งข้อเสนอแล้ว กรุณารอลูกค้าเลือกช่าง");
-    await c.execute(
+    await executeInsert(
+      c,
       `INSERT INTO urgent_offers (job_id, technician_id, price, eta_minutes, note) VALUES (?, ?, ?, ?, ?)`,
       [input.jobId, userId, input.price, input.etaMinutes, input.note],
     );
-    await c.execute(
+    await executeInsert(
+      c,
       `INSERT INTO notifications (user_id, title, message, related_job_id) VALUES (?, 'มีช่างตอบรับงานด่วน', 'มีข้อเสนอใหม่ ดูราคาและเวลาที่ช่างพร้อมไปถึงได้ที่หน้าเรียกด่วน', ?)`,
       [j.customer_id, input.jobId],
     );
@@ -247,19 +251,22 @@ export async function chooseUrgentOffer(
       `UPDATE jobs SET technician_id = ?, status = 'accepted', budget_min = ?, budget_max = ? WHERE id = ?`,
       [offer.technician_id, offer.price, offer.price, jobId],
     );
-    await c.execute(
-      `INSERT INTO job_requests (job_id, technician_id, message, quoted_price, status, responded_at) VALUES (?, ?, ?, ?, 'accepted', NOW()) ON DUPLICATE KEY UPDATE status = 'accepted', responded_at = NOW(), quoted_price = VALUES(quoted_price)`,
+    await executeInsert(
+      c,
+      `INSERT INTO job_requests (job_id, technician_id, message, quoted_price, status, responded_at) VALUES (?, ?, ?, ?, 'accepted', NOW()) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id), status = 'accepted', responded_at = NOW(), quoted_price = VALUES(quoted_price)`,
       [jobId, offer.technician_id, offer.note, offer.price],
     );
     await c.execute(
       `UPDATE job_requests SET status = 'rejected', responded_at = NOW() WHERE job_id = ? AND technician_id <> ? AND status = 'pending'`,
       [jobId, offer.technician_id],
     );
-    const [room] = await c.execute<ResultSetHeader>(
+    const [room] = await executeInsert(
+      c,
       `INSERT INTO chat_rooms (job_id, customer_id, technician_id) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id)`,
       [jobId, userId, offer.technician_id],
     );
-    await c.execute(
+    await executeInsert(
+      c,
       `INSERT INTO notifications (user_id, title, message, related_job_id) VALUES (?, 'ลูกค้าเลือกคุณแล้ว', 'เปิดงานเพื่อคุยรายละเอียดและยืนยันการเดินทางกับลูกค้า', ?)`,
       [offer.technician_id, jobId],
     );
@@ -291,7 +298,8 @@ export async function progressJob(
     if (!job || job.status !== previous)
       throw new DispatchError("ไม่สามารถเปลี่ยนสถานะได้ กรุณารีเฟรชงาน");
     await c.execute(`UPDATE jobs SET status = ? WHERE id = ?`, [status, jobId]);
-    await c.execute(
+    await executeInsert(
+      c,
       `INSERT INTO notifications (user_id, title, message, related_job_id) VALUES (?, ?, ?, ?)`,
       [
         job.customer_id,

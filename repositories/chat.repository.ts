@@ -1,3 +1,4 @@
+import { executeInsert } from "@/lib/database-insert";
 import { type ResultSetHeader, type RowDataPacket } from "mysql2";
 import { db } from "@/lib/db";
 
@@ -37,11 +38,16 @@ type ChatMessageRow = RowDataPacket & {
   created_at: string;
 };
 
-export async function createChatRoom(jobId: string, customerId: string, technicianId: string): Promise<string> {
-  const [result] = await db.execute<ResultSetHeader>(
+export async function createChatRoom(
+  jobId: string,
+  customerId: string,
+  technicianId: string,
+): Promise<string> {
+  const [result] = await executeInsert(
+    db,
     `INSERT IGNORE INTO chat_rooms (job_id, customer_id, technician_id)
      VALUES (?, ?, ?)`,
-    [jobId, customerId, technicianId]
+    [jobId, customerId, technicianId],
   );
   if (result.insertId) {
     return String(result.insertId);
@@ -49,18 +55,21 @@ export async function createChatRoom(jobId: string, customerId: string, technici
   // If exists, find and return it
   const [rows] = await db.execute<ChatRoomRow[]>(
     `SELECT id FROM chat_rooms WHERE job_id = ? AND customer_id = ? AND technician_id = ?`,
-    [jobId, customerId, technicianId]
+    [jobId, customerId, technicianId],
   );
   return String(rows[0].id);
 }
 
-export async function getChatRoomsByUser(userId: string, role: 'customer' | 'technician'): Promise<ChatRoom[]> {
-  const column = role === 'customer' ? 'customer_id' : 'technician_id';
+export async function getChatRoomsByUser(
+  userId: string,
+  role: "customer" | "technician",
+): Promise<ChatRoom[]> {
+  const column = role === "customer" ? "customer_id" : "technician_id";
   const [rows] = await db.execute<ChatRoomRow[]>(
     `SELECT * FROM chat_rooms WHERE ${column} = ? ORDER BY created_at DESC`,
-    [userId]
+    [userId],
   );
-  return rows.map(r => ({
+  return rows.map((r) => ({
     id: String(r.id),
     jobId: String(r.job_id),
     customerId: String(r.customer_id),
@@ -72,7 +81,7 @@ export async function getChatRoomsByUser(userId: string, role: 'customer' | 'tec
 export async function getRoomById(roomId: string): Promise<ChatRoom | null> {
   const [rows] = await db.execute<ChatRoomRow[]>(
     `SELECT * FROM chat_rooms WHERE id = ?`,
-    [roomId]
+    [roomId],
   );
   if (rows.length === 0) return null;
   const r = rows[0];
@@ -85,21 +94,29 @@ export async function getRoomById(roomId: string): Promise<ChatRoom | null> {
   };
 }
 
-export async function addMessage(roomId: string, senderId: string, message: string, attachmentUrl?: string): Promise<string> {
-  const [result] = await db.execute<ResultSetHeader>(
+export async function addMessage(
+  roomId: string,
+  senderId: string,
+  message: string,
+  attachmentUrl?: string,
+): Promise<string> {
+  const [result] = await executeInsert(
+    db,
     `INSERT INTO chat_messages (room_id, sender_id, message, attachment_url)
      VALUES (?, ?, ?, ?)`,
-    [roomId, senderId, message, attachmentUrl ?? null]
+    [roomId, senderId, message, attachmentUrl ?? null],
   );
   return String(result.insertId);
 }
 
-export async function getMessagesByRoom(roomId: string): Promise<ChatMessage[]> {
+export async function getMessagesByRoom(
+  roomId: string,
+): Promise<ChatMessage[]> {
   const [rows] = await db.execute<ChatMessageRow[]>(
     `SELECT * FROM chat_messages WHERE room_id = ? ORDER BY created_at ASC`,
-    [roomId]
+    [roomId],
   );
-  return rows.map(r => ({
+  return rows.map((r) => ({
     id: String(r.id),
     roomId: String(r.room_id),
     senderId: String(r.sender_id),
@@ -110,10 +127,12 @@ export async function getMessagesByRoom(roomId: string): Promise<ChatMessage[]> 
   }));
 }
 
-export async function getLatestMessage(roomId: string): Promise<ChatMessage | null> {
+export async function getLatestMessage(
+  roomId: string,
+): Promise<ChatMessage | null> {
   const [rows] = await db.execute<ChatMessageRow[]>(
     `SELECT * FROM chat_messages WHERE room_id = ? ORDER BY created_at DESC LIMIT 1`,
-    [roomId]
+    [roomId],
   );
   if (rows.length === 0) return null;
   const r = rows[0];
@@ -128,18 +147,24 @@ export async function getLatestMessage(roomId: string): Promise<ChatMessage | nu
   };
 }
 
-export async function getUnreadCount(roomId: string, userId: string): Promise<number> {
+export async function getUnreadCount(
+  roomId: string,
+  userId: string,
+): Promise<number> {
   const [rows] = await db.execute<RowDataPacket[]>(
     `SELECT COUNT(*) as count FROM chat_messages WHERE room_id = ? AND sender_id != ? AND is_read = FALSE`,
-    [roomId, userId]
+    [roomId, userId],
   );
   return Number(rows[0].count);
 }
 
-export async function markMessagesAsRead(roomId: string, userId: string): Promise<boolean> {
+export async function markMessagesAsRead(
+  roomId: string,
+  userId: string,
+): Promise<boolean> {
   const [result] = await db.execute<ResultSetHeader>(
     `UPDATE chat_messages SET is_read = TRUE WHERE room_id = ? AND sender_id != ?`,
-    [roomId, userId]
+    [roomId, userId],
   );
   return result.affectedRows > 0;
 }

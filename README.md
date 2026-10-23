@@ -12,6 +12,21 @@
 
 Production: `npm run build` ตามด้วย `npm start` ฟอนต์ Noto Sans Thai และ Geist จะดาวน์โหลดขณะ build และเสิร์ฟจากเว็บเอง
 
+## TiDB Cloud และ ID หลังนำเข้าฐานข้อมูล
+
+โค้ดรองรับ `DB_USERNAME` แทน `DB_USER` และ `DB_DATABASE` แทน `DB_NAME` พร้อมเปิด TLS และตรวจใบรับรองอัตโนมัติสำหรับ `*.tidbcloud.com` บน Vercel ให้ตั้งตัวแปรใน Project Settings → Environment Variables และ deploy โค้ดล่าสุดหลังแก้ไข
+
+ถ้านำเข้า dump แล้วได้ `Field 'id' doesn't have a default value` ให้ตรวจว่าคอลัมน์ `id` สูญเสีย `AUTO_INCREMENT` หรือไม่ TiDB ไม่รองรับการเพิ่มคุณสมบัตินี้ให้คอลัมน์เดิมภายหลัง สคริปต์ต่อไปนี้เพิ่ม Sequence ที่เริ่มต่อจาก ID สูงสุดเดิม โดยไม่เปลี่ยนข้อมูลหรือ foreign keys:
+
+```powershell
+# ตรวจแผนก่อน
+node --env-file=.env scripts/repair-tidb-identities.mjs
+# เพิ่ม Sequence ให้ตารางที่ต้องใช้
+node --env-file=.env scripts/repair-tidb-identities.mjs --apply
+```
+
+จุด INSERT ในแอปตรวจโครงสร้างตารางและเลือกใช้ Sequence เฉพาะตารางที่ไม่มี ID อัตโนมัติ ฐานข้อมูลใหม่ที่มี `AUTO_INCREMENT` ใช้งานตามปกติ ต้อง deploy โค้ดที่มี `lib/database-insert.ts` พร้อมการเพิ่ม Sequence จึงจะใช้งานตารางที่นำเข้าได้
+
 ## เรียกช่างด่วน
 
 - ลูกค้า: `/dashboard/customer/urgent` เลือกประเภทบริการ ระบุอาการ ที่อยู่ ตำแหน่ง และรัศมี 5–50 กม. พร้อมงบประมาณถ้าต้องการ

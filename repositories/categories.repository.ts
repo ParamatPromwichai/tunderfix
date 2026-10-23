@@ -1,5 +1,6 @@
 import { type RowDataPacket } from "mysql2";
 import { db } from "@/lib/db";
+import { executeInsert } from "@/lib/database-insert";
 
 export interface ServiceCategory {
   id: string;
@@ -32,26 +33,32 @@ export async function getAllCategories(): Promise<ServiceCategory[]> {
     `SELECT id, name, description, is_active, created_at
      FROM service_categories
      WHERE is_active = TRUE
-     ORDER BY name ASC`
+     ORDER BY name ASC`,
   );
   return rows.map(mapRow);
 }
 
-export async function getCategoryById(id: string): Promise<ServiceCategory | null> {
+export async function getCategoryById(
+  id: string,
+): Promise<ServiceCategory | null> {
   const [rows] = await db.execute<ServiceCategoryRow[]>(
     `SELECT id, name, description, is_active, created_at
      FROM service_categories
      WHERE id = ?`,
-    [id]
+    [id],
   );
   return rows[0] ? mapRow(rows[0]) : null;
 }
 
-export async function createCategory(name: string, description?: string): Promise<string> {
-  const [result] = await db.execute<import("mysql2").ResultSetHeader>(
+export async function createCategory(
+  name: string,
+  description?: string,
+): Promise<string> {
+  const [result] = await executeInsert(
+    db,
     `INSERT INTO service_categories (name, description, is_active)
      VALUES (?, ?, TRUE)`,
-    [name, description || null]
+    [name, description || null],
   );
   return String(result.insertId);
 }

@@ -1,7 +1,14 @@
+import { executeInsert } from "@/lib/database-insert";
 import { type ResultSetHeader, type RowDataPacket } from "mysql2";
 import { db } from "@/lib/db";
 
-export type JobStatus = 'requested' | 'accepted' | 'on_the_way' | 'in_progress' | 'completed' | 'cancelled';
+export type JobStatus =
+  | "requested"
+  | "accepted"
+  | "on_the_way"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
 
 export interface Job {
   id: string;
@@ -79,48 +86,66 @@ export async function createJob(input: {
   preferredDate?: string;
   preferredTime?: string;
 }): Promise<string> {
-  const [result] = await db.execute<ResultSetHeader>(
+  const [result] = await executeInsert(
+    db,
     `INSERT INTO jobs (
       customer_id, category_id, technician_id, title, description, address_text, 
       latitude, longitude, budget_min, budget_max, preferred_date, preferred_time
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
-      input.customerId, input.categoryId, input.technicianId ?? null, input.title, input.description, input.addressText,
-      input.latitude, input.longitude, input.budgetMin ?? null, input.budgetMax ?? null, 
-      input.preferredDate ?? null, input.preferredTime ?? null
-    ]
+      input.customerId,
+      input.categoryId,
+      input.technicianId ?? null,
+      input.title,
+      input.description,
+      input.addressText,
+      input.latitude,
+      input.longitude,
+      input.budgetMin ?? null,
+      input.budgetMax ?? null,
+      input.preferredDate ?? null,
+      input.preferredTime ?? null,
+    ],
   );
   return String(result.insertId);
 }
 
 export async function getJobById(id: string): Promise<Job | null> {
-  const [rows] = await db.execute<JobRow[]>(
-    `SELECT * FROM jobs WHERE id = ?`,
-    [id]
-  );
+  const [rows] = await db.execute<JobRow[]>(`SELECT * FROM jobs WHERE id = ?`, [
+    id,
+  ]);
   return rows[0] ? mapRow(rows[0]) : null;
 }
 
-export async function updateJobStatus(id: string, status: JobStatus): Promise<boolean> {
+export async function updateJobStatus(
+  id: string,
+  status: JobStatus,
+): Promise<boolean> {
   const [result] = await db.execute<ResultSetHeader>(
     `UPDATE jobs SET status = ? WHERE id = ?`,
-    [status, id]
+    [status, id],
   );
   return result.affectedRows > 0;
 }
 
-export async function updateJobFinalPrice(id: string, finalPrice: number): Promise<boolean> {
+export async function updateJobFinalPrice(
+  id: string,
+  finalPrice: number,
+): Promise<boolean> {
   const [result] = await db.execute<ResultSetHeader>(
     `UPDATE jobs SET final_price = ? WHERE id = ?`,
-    [finalPrice, id]
+    [finalPrice, id],
   );
   return result.affectedRows > 0;
 }
 
-export async function assignTechnician(id: string, technicianId: string): Promise<boolean> {
+export async function assignTechnician(
+  id: string,
+  technicianId: string,
+): Promise<boolean> {
   const [result] = await db.execute<ResultSetHeader>(
     `UPDATE jobs SET technician_id = ?, status = 'accepted' WHERE id = ?`,
-    [technicianId, id]
+    [technicianId, id],
   );
   return result.affectedRows > 0;
 }
@@ -128,15 +153,17 @@ export async function assignTechnician(id: string, technicianId: string): Promis
 export async function getJobsByCustomer(customerId: string): Promise<Job[]> {
   const [rows] = await db.execute<JobRow[]>(
     `SELECT * FROM jobs WHERE customer_id = ? ORDER BY created_at DESC`,
-    [customerId]
+    [customerId],
   );
   return rows.map(mapRow);
 }
 
-export async function getJobsByTechnician(technicianId: string): Promise<Job[]> {
+export async function getJobsByTechnician(
+  technicianId: string,
+): Promise<Job[]> {
   const [rows] = await db.execute<JobRow[]>(
     `SELECT * FROM jobs WHERE technician_id = ? ORDER BY created_at DESC`,
-    [technicianId]
+    [technicianId],
   );
   return rows.map(mapRow);
 }

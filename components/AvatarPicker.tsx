@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useId } from "react";
 import { Camera, Trash2 } from "lucide-react";
+import { AVATAR_ACCEPT, validateAvatarFile } from "@/lib/avatar-file";
 
 export function AvatarPicker({
   defaultUrl,
@@ -14,18 +15,50 @@ export function AvatarPicker({
     defaultUrl || null,
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const objectUrlRef = useRef<string | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
+  const helpId = useId();
+  const errorId = useId();
+
+  useEffect(
+    () => () => {
+      if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    },
+    [],
+  );
 
   const fallbackUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(defaultSeed)}&backgroundColor=0284c7&textColor=ffffff`;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      const error = validateAvatarFile(file);
+      if (error) {
+        e.target.value = "";
+        setFileError(
+          error === "avatar-size"
+            ? "เลือกรูปภาพขนาดไม่เกิน 3 MB"
+            : "รองรับเฉพาะ JPG, PNG, WebP และ GIF",
+        );
+        if (objectUrlRef.current) {
+          URL.revokeObjectURL(objectUrlRef.current);
+          objectUrlRef.current = null;
+          setPreviewUrl(defaultUrl || null);
+        }
+        return;
+      }
+      setFileError(null);
+      if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
       const url = URL.createObjectURL(file);
+      objectUrlRef.current = url;
       setPreviewUrl(url);
     }
   };
 
   const handleClear = () => {
+    setFileError(null);
+    if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    objectUrlRef.current = null;
     setPreviewUrl(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -34,7 +67,9 @@ export function AvatarPicker({
 
   return (
     <div className="flex flex-col md:flex-row items-center md:items-start gap-6 pb-6 border-b border-stone-100">
-      <div
+      <button
+        type="button"
+        aria-label="เลือกรูปโปรไฟล์"
         className="relative shrink-0 group cursor-pointer"
         onClick={() => fileInputRef.current?.click()}
       >
@@ -64,7 +99,7 @@ export function AvatarPicker({
             ></path>
           </svg>
         </div>
-      </div>
+      </button>
       <div>
         <h2 className="font-bold text-lg text-stone-900">รูปโปรไฟล์</h2>
         <p className="mobile-optional-copy text-sm text-stone-500 mb-3">
@@ -93,11 +128,20 @@ export function AvatarPicker({
             <span className="mobile-command-label">ลบ</span>
           </button>
         </div>
+        <p id={helpId} className="mt-2 text-sm text-stone-500">
+          JPG, PNG, WebP หรือ GIF · ไม่เกิน 3 MB
+        </p>
+        {fileError && (
+          <p id={errorId} role="alert" className="mt-2 text-sm text-red-700">
+            {fileError}
+          </p>
+        )}
       </div>
       <input
         type="file"
         name="avatarFile"
-        accept="image/*"
+        accept={AVATAR_ACCEPT}
+        aria-describedby={fileError ? `${helpId} ${errorId}` : helpId}
         ref={fileInputRef}
         onChange={handleFileChange}
         className="hidden"

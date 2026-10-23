@@ -8,9 +8,12 @@
     "start": "next start",
     "lint": "eslint",
     "db:migrate:dispatch": "node --env-file=.env scripts/migrate-dispatch.mjs",
+    "db:migrate:avatars": "node --env-file=.env scripts/migrate-avatars.mjs",
+    "db:repair:tidb-ids": "node --env-file=.env scripts/repair-tidb-identities.mjs",
     "test:dispatch": "node --env-file=.env scripts/qa-dispatch.mjs"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.2",
     "bcrypt": "^6.0.0",
     "framer-motion": "^14.0.0",
     "jsonwebtoken": "^9.0.3",

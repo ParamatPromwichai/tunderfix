@@ -1,4 +1,5 @@
-import { type ResultSetHeader, type RowDataPacket } from "mysql2";
+import { executeInsert } from "@/lib/database-insert";
+import { type RowDataPacket } from "mysql2";
 import { db } from "@/lib/db";
 
 export interface Review {
@@ -28,12 +29,19 @@ export async function createReview(input: {
   rating: number;
   comment?: string;
 }): Promise<string> {
-  const [result] = await db.execute<ResultSetHeader>(
+  const [result] = await executeInsert(
+    db,
     `INSERT INTO reviews (job_id, customer_id, technician_id, rating, comment)
      VALUES (?, ?, ?, ?, ?)`,
-    [input.jobId, input.customerId, input.technicianId, input.rating, input.comment ?? null]
+    [
+      input.jobId,
+      input.customerId,
+      input.technicianId,
+      input.rating,
+      input.comment ?? null,
+    ],
   );
-  
+
   // Update technician profile average rating
   await db.execute(
     `UPDATE technician_profiles 
@@ -42,18 +50,20 @@ export async function createReview(input: {
            SELECT AVG(rating) FROM reviews WHERE technician_id = ?
          )
      WHERE user_id = ?`,
-    [input.technicianId, input.technicianId]
+    [input.technicianId, input.technicianId],
   );
 
   return String(result.insertId);
 }
 
-export async function getReviewsByTechnician(technicianId: string): Promise<Review[]> {
+export async function getReviewsByTechnician(
+  technicianId: string,
+): Promise<Review[]> {
   const [rows] = await db.execute<ReviewRow[]>(
     `SELECT * FROM reviews WHERE technician_id = ? ORDER BY created_at DESC`,
-    [technicianId]
+    [technicianId],
   );
-  return rows.map(r => ({
+  return rows.map((r) => ({
     id: String(r.id),
     jobId: String(r.job_id),
     customerId: String(r.customer_id),
@@ -67,7 +77,7 @@ export async function getReviewsByTechnician(technicianId: string): Promise<Revi
 export async function getReviewByJob(jobId: string): Promise<Review | null> {
   const [rows] = await db.execute<ReviewRow[]>(
     `SELECT * FROM reviews WHERE job_id = ?`,
-    [jobId]
+    [jobId],
   );
   if (!rows[0]) return null;
   return {

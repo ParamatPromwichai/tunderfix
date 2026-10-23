@@ -1,4 +1,5 @@
-import { type ResultSetHeader, type RowDataPacket } from "mysql2";
+import { executeInsert } from "@/lib/database-insert";
+import { type RowDataPacket } from "mysql2";
 
 import { db } from "@/lib/db";
 
@@ -103,16 +104,24 @@ export async function createUser(input: CreateUserRecord): Promise<UserRecord> {
   try {
     await connection.beginTransaction();
 
-    const [userResult] = await connection.execute<ResultSetHeader>(
+    const [userResult] = await executeInsert(
+      connection,
       `INSERT INTO users (full_name, email, phone, password_hash, role)
        VALUES (?, ?, ?, ?, ?)`,
-      [input.fullName, input.email, input.phone, input.passwordHash, input.role],
+      [
+        input.fullName,
+        input.email,
+        input.phone,
+        input.passwordHash,
+        input.role,
+      ],
     );
 
     const userId = String(userResult.insertId);
 
     if (input.role === "technician" && input.technicianProfile) {
-      await connection.execute(
+      await executeInsert(
+        connection,
         `INSERT INTO technician_profiles
           (user_id, bio, years_experience, latitude, longitude, service_radius_km)
          VALUES (?, ?, ?, ?, ?, ?)`,

@@ -8,6 +8,7 @@ import {
 } from "@/repositories/auth.repository";
 import { createAuthToken } from "@/lib/auth";
 import type { LoginInput, RegisterInput } from "@/lib/validations";
+import { getServerEnv } from "@/lib/validations";
 
 const BCRYPT_SALT_ROUNDS = 12;
 
@@ -26,6 +27,8 @@ function toPublicUser(user: UserRecord): PublicUser {
 }
 
 export async function registerUser(input: RegisterInput) {
+  // Fail before creating an account if the deployment cannot sign its session.
+  getServerEnv();
   const passwordHash = await bcrypt.hash(input.password, BCRYPT_SALT_ROUNDS);
   const user = await createUser({
     fullName: input.fullName,
@@ -72,7 +75,10 @@ export async function loginUser(input: LoginInput) {
     throw new InvalidCredentialsError();
   }
 
-  const passwordMatches = await bcrypt.compare(input.password, user.passwordHash);
+  const passwordMatches = await bcrypt.compare(
+    input.password,
+    user.passwordHash,
+  );
 
   if (!passwordMatches) {
     throw new InvalidCredentialsError();
@@ -88,7 +94,9 @@ export async function loginUser(input: LoginInput) {
   };
 }
 
-export async function getActiveUserById(id: string): Promise<PublicUser | null> {
+export async function getActiveUserById(
+  id: string,
+): Promise<PublicUser | null> {
   const user = await findUserById(id);
 
   if (!user || user.status !== "active") {

@@ -1,3 +1,4 @@
+import { executeInsert } from "@/lib/database-insert";
 import { type ResultSetHeader, type RowDataPacket } from "mysql2";
 import { db } from "@/lib/db";
 
@@ -27,20 +28,23 @@ export async function createNotification(input: {
   message: string;
   relatedJobId?: string;
 }): Promise<string> {
-  const [result] = await db.execute<ResultSetHeader>(
+  const [result] = await executeInsert(
+    db,
     `INSERT INTO notifications (user_id, title, message, related_job_id)
      VALUES (?, ?, ?, ?)`,
-    [input.userId, input.title, input.message, input.relatedJobId ?? null]
+    [input.userId, input.title, input.message, input.relatedJobId ?? null],
   );
   return String(result.insertId);
 }
 
-export async function getNotificationsByUser(userId: string): Promise<Notification[]> {
+export async function getNotificationsByUser(
+  userId: string,
+): Promise<Notification[]> {
   const [rows] = await db.execute<NotificationRow[]>(
     `SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC`,
-    [userId]
+    [userId],
   );
-  return rows.map(r => ({
+  return rows.map((r) => ({
     id: String(r.id),
     userId: String(r.user_id),
     title: r.title,
@@ -54,7 +58,7 @@ export async function getNotificationsByUser(userId: string): Promise<Notificati
 export async function markAsRead(id: string, userId: string): Promise<boolean> {
   const [result] = await db.execute<ResultSetHeader>(
     `UPDATE notifications SET is_read = TRUE WHERE id = ? AND user_id = ?`,
-    [id, userId]
+    [id, userId],
   );
   return result.affectedRows > 0;
 }
@@ -62,7 +66,7 @@ export async function markAsRead(id: string, userId: string): Promise<boolean> {
 export async function markAllAsRead(userId: string): Promise<boolean> {
   const [result] = await db.execute<ResultSetHeader>(
     `UPDATE notifications SET is_read = TRUE WHERE user_id = ?`,
-    [userId]
+    [userId],
   );
   return result.affectedRows > 0;
 }
