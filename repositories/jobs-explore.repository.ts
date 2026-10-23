@@ -31,6 +31,7 @@ export async function getOpenJobs(technicianId: string): Promise<Job[]> {
      FROM jobs j
      LEFT JOIN job_requests jr ON j.id = jr.job_id AND jr.technician_id = ?
      WHERE j.status = 'requested' AND j.technician_id IS NULL AND jr.id IS NULL
+       AND NOT EXISTS (SELECT 1 FROM urgent_dispatch d WHERE d.job_id = j.id)
      ORDER BY j.created_at DESC
      LIMIT 50`,
     [technicianId]

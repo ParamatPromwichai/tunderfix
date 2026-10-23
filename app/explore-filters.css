@@ -1,0 +1,204 @@
+.explore-page,
+.explore-page > * {
+  min-width: 0;
+}
+.explore-filters {
+  min-width: 0;
+  padding: 22px;
+  background: #f8fbfa;
+  border: 1px solid #d7e4e1;
+  border-radius: 14px;
+}
+.explore-category-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 13px;
+}
+.explore-category-heading h2 {
+  color: #344e4e;
+  font-size: 16px;
+  font-weight: 600;
+}
+.explore-category-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.explore-category-controls > button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: #567875;
+  border: 1px solid #dce7e3;
+  border-radius: 8px;
+  background: #fff;
+}
+.explore-category-controls > button:hover:not(:disabled) {
+  background: #e8f1ee;
+  border-color: #b7cfca;
+}
+.explore-category-controls > button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.explore-category-viewport {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  overflow-anchor: none;
+  min-width: 0;
+  padding: 4px 0 8px;
+}
+.explore-category-viewport::-webkit-scrollbar {
+  display: none;
+}
+.explore-category-track {
+  display: flex;
+  width: max-content;
+}
+.explore-category-group {
+  display: flex;
+  align-items: stretch;
+  flex: 0 0 auto;
+  gap: 9px;
+  padding-right: 9px;
+}
+.explore-category-viewport[data-scrollable="false"] .explore-category-copy {
+  display: none;
+}
+.explore-category-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 11px 16px;
+  min-height: 47px;
+  border: 1px solid #d8e4e0;
+  border-radius: 9px;
+  background: #fff;
+  font-size: 14px;
+  color: #5c7470;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    color 0.18s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.explore-category-chip svg {
+  color: #79928a;
+}
+.explore-category-chip:hover {
+  border-color: #a6c4ba;
+  background: #f0f7f3;
+}
+.explore-category-chip.is-selected {
+  background: #396b71;
+  color: #fff;
+  border-color: #396b71;
+}
+.explore-category-chip.is-selected svg {
+  color: #dbeae0;
+}
+.explore-category-chip:focus-visible {
+  outline: 2px solid #396b71;
+  outline-offset: 2px;
+}
+.explore-map-section {
+  margin-top: 21px;
+  padding-top: 19px;
+  border-top: 1px solid #e1e9e4;
+}
+.explore-map-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.explore-map-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #45615a;
+}
+.explore-pin-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #7c9480;
+  flex-shrink: 0;
+}
+.explore-map-section > div > p {
+  font-size: 12px;
+  color: #87988d;
+}
+.explore-page:has(.explore-filters[aria-busy="true"]) .explore-results {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.explore-results {
+  transition: opacity 0.2s;
+}
+@media (max-width: 700px) {
+  .explore-filters {
+    padding: 14px 13px;
+    border-radius: 13px;
+  }
+  .explore-category-heading {
+    margin-bottom: 8px;
+  }
+  .explore-category-heading h2 {
+    font-size: 17px;
+  }
+  .explore-category-controls {
+    gap: 3px;
+  }
+  .explore-category-controls > button {
+    width: 40px;
+    height: 40px;
+  }
+  .explore-category-chip {
+    min-height: 48px;
+    font-size: 15px;
+    padding: 11px 14px;
+    gap: 7px;
+  }
+  .explore-category-group {
+    gap: 8px;
+    padding-right: 8px;
+  }
+  .explore-map-section {
+    margin-top: 13px;
+    padding-top: 14px;
+  }
+  .explore-map-heading {
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 10px;
+  }
+  .explore-map-heading h2 {
+    font-size: 15px;
+  }
+  .explore-pin-status {
+    font-size: 12px;
+  }
+  .explore-map-section > div > p {
+    font-size: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .explore-category-chip,
+  .explore-results {
+    transition: none;
+  }
+}

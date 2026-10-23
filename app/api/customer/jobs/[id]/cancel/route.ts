@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAuthUserFromCookies } from "@/lib/auth";
-import { updateStatus, getJobDetails } from "@/services/jobs.service";
+import { getJobDetails } from "@/services/jobs.service";
+import { db } from "@/lib/db";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -13,7 +14,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       return NextResponse.redirect(new URL("/dashboard/customer", request.url));
     }
 
-    await updateStatus(id, 'cancelled');
+    await db.execute(`UPDATE jobs SET status = 'cancelled' WHERE id = ? AND customer_id = ? AND status = 'requested'`, [id, tokenUser.userId]);
 
     return NextResponse.redirect(new URL(`/dashboard/customer/jobs/${id}`, request.url), 303);
   } catch (error) {

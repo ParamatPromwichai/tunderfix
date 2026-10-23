@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS users (
   role ENUM('customer', 'technician', 'admin') NOT NULL DEFAULT 'customer',
   status ENUM('active', 'suspended') NOT NULL DEFAULT 'active',
   avatar_url VARCHAR(500) NULL,
+  latitude DECIMAL(10,7) NULL,
+  longitude DECIMAL(10,7) NULL,
+  address_text TEXT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_users_role (role),
@@ -65,6 +68,7 @@ CREATE TABLE IF NOT EXISTS technician_services (
   description TEXT NULL,
   price_min DECIMAL(10,2) NULL,
   price_max DECIMAL(10,2) NULL,
+  experience_years TINYINT UNSIGNED NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_technician_services_technician
     FOREIGN KEY (technician_id) REFERENCES technician_profiles(id) ON DELETE CASCADE,
@@ -93,6 +97,7 @@ CREATE TABLE IF NOT EXISTS jobs (
   longitude DECIMAL(10,7) NOT NULL,
   budget_min DECIMAL(10,2) NULL,
   budget_max DECIMAL(10,2) NULL,
+  final_price DECIMAL(10,2) NULL,
   preferred_date DATE NULL,
   preferred_time TIME NULL,
   status ENUM(

@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ThunderFix — เรื่องช่าง ใกล้แค่นี้
 
-## Getting Started
+แพลตฟอร์มหาช่างภาษาไทย มีพื้นที่ลูกค้าและช่าง แชต งานนัดหมาย และประกาศหาช่างด่วนตามตำแหน่ง
 
-First, run the development server:
+## เริ่มใช้งาน
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. ติดตั้ง dependencies ด้วย `npm install`
+2. กำหนด `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` และ `JWT_SECRET` ใน `.env`
+3. สำหรับฐานข้อมูลใหม่ นำเข้า `database_scema/technician_finder_simple.sql`
+4. รัน `npm run db:migrate:dispatch` เพื่อเพิ่มตารางงานด่วนแบบ additive และสามารถรันซ้ำได้
+5. รัน `npm run dev` แล้วเปิด `http://localhost:3000`
+
+Production: `npm run build` ตามด้วย `npm start` ฟอนต์ Noto Sans Thai และ Geist จะดาวน์โหลดขณะ build และเสิร์ฟจากเว็บเอง
+
+## เรียกช่างด่วน
+
+- ลูกค้า: `/dashboard/customer/urgent` เลือกประเภทบริการ ระบุอาการ ที่อยู่ ตำแหน่ง และรัศมี 5–50 กม. พร้อมงบประมาณถ้าต้องการ
+- ประกาศเปิดรับข้อเสนอ 30 นาที ลูกค้าลงประกาศที่ยังเปิดอยู่ได้ครั้งละหนึ่งงาน
+- ช่าง: เพิ่มประเภทบริการที่เมนูบริการและราคา จากนั้นเปิดรับงานที่ `/dashboard/technician/urgent` และยืนยันตำแหน่งจริง
+- จับคู่เฉพาะช่างที่เปิดรับงาน รับประเภทบริการนั้น และอยู่ภายในทั้งรัศมีของลูกค้าและรัศมีบริการของช่าง
+- ช่างส่งราคา เวลาที่พร้อมถึง และหมายเหตุได้หนึ่งข้อเสนอต่องาน โดยยังไม่ถือว่าถูกว่าจ้าง
+- ลูกค้าเลือกช่าง ระบบยืนยันงานและสร้างห้องแชตใน transaction เดียว ป้องกันการเลือกช่างซ้ำจากคำขอพร้อมกัน
+- ช่างที่ถูกเลือกอัปเดตสถานะออกเดินทางและเริ่มซ่อมได้ ลูกค้าเห็นสถานะในหน้างาน ช่างบันทึกราคาสุทธิและจบงานผ่านขั้นตอนเดิม
+- ข้อเสนองานด่วนมีหน้าติดตามของช่างเอง ทั้งรอยืนยัน ถูกเลือก เลือกช่างคนอื่น หมดเวลา และยกเลิก
+
+การแจ้งเตือนในเว็บใช้ polling ทุก 5 วินาทีขณะหน้าเว็บมองเห็นอยู่ พร้อม heartbeat ทุก 30 วินาที สถานะออนไลน์หมดอายุเมื่อไม่มี heartbeat เกิน 90 วินาที การปิดเว็บหรือเปลี่ยนไปใช้งานแอปอื่นจึงอาจทำให้พักรับงาน ต้องเปิดรับอีกครั้งเมื่อกลับมา
+
+ระบบนี้ยังไม่มี Web Push ขณะปิดเบราว์เซอร์ และไม่มี GPS ติดตามการเดินทางต่อเนื่อง ระยะทางเป็นระยะเส้นตรง ส่วนเวลาถึงเป็นการประเมินจากช่าง ไม่รับประกันการตอบรับหรือเวลาเข้าถึงหน้างาน
+
+ที่อยู่ละเอียดและพิกัดลูกค้าไม่ถูกส่งในฟีดงานด่วน ช่างเปิดรายละเอียดที่อยู่ได้หลังลูกค้าเลือกเท่านั้น การกดดูแผนที่อย่างเดียวยังไม่ยืนยันตำแหน่ง ต้องปักหมุดหรือกดใช้ตำแหน่งปัจจุบัน
+
+## ตรวจสอบระบบ
+
+- `npx tsc --noEmit`
+- `npm run build`
+- `npm run test:dispatch` ทดสอบ API จริง การกรองพื้นที่ สิทธิ์ การหมดเวลา การรับงานพร้อมกัน การสร้างแชต และสถานะเดินทาง/เริ่มงาน
+
+Integration test ใช้ฐานข้อมูลแยก **`thunderfix_qa` บน `127.0.0.1:3307` เท่านั้น** และเซิร์ฟเวอร์ทดสอบ `http://127.0.0.1:3100` ห้ามเปลี่ยนให้ใช้ฐานข้อมูลจริง ข้อมูลทุกบัญชีในสคริปต์เป็นข้อมูลทดสอบ
+
+ตัวอย่างเปิดเซิร์ฟเวอร์ QA ใน PowerShell เมื่อ MySQL ทดสอบพร้อมแล้ว:
+
+```powershell
+$env:THUNDERFIX_QA='1'
+$env:DB_HOST='127.0.0.1'
+$env:DB_PORT='3307'
+$env:DB_USER='root'
+$env:DB_PASSWORD=''
+$env:DB_NAME='thunderfix_qa'
+node node_modules/next/dist/bin/next dev --hostname 127.0.0.1 --port 3100
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`THUNDERFIX_QA=1` แยก build ไว้ใน `.next-qa` เพื่อไม่รบกวนพรีวิวหลัก ใช้ environment เดียวกันกับ `npm run build` และ `next start` ถ้าทดสอบ production build
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ทิศทางแบรนด์
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+ใช้สีงาช้างเป็นพื้นที่อ่าน สีถ่านสำหรับโครงสร้าง สีส้มอิฐสำหรับการเรียกด่วน และสีเขียวหม่นสำหรับสถานะพร้อม/สำเร็จ ตัวอักษรไทย Noto Sans Thai ช่วยให้ข้อความบริการและแบบฟอร์มอ่านง่าย
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+หน้าแรกแยก “เรียกด่วน” กับ “วางแผนนัดหมาย” ตามเจตนาของผู้ใช้ แดชบอร์ดใช้ลำดับงานและรายการแทนกริดการ์ดทุกส่วน เมนูมือถือคงทางเข้างานด่วนไว้ทุกหน้าของทั้งสองบทบาท ภาพแผนผังหน้าแรกเป็นภาพอธิบายการทำงาน ไม่ใช่ข้อมูลตำแหน่งช่างจริง

@@ -1,0 +1,277 @@
+/* Keep the urgent request readable in one mobile screen per step. */
+.urgent-form-step {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.urgent-form-progress,
+.wizard-back,
+.wizard-next {
+  display: none;
+}
+.urgent-form-footer {
+  min-width: 0;
+}
+
+@media (min-width: 1100px) {
+  .urgent-compose-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .urgent-compose-layout > .dispatch-explainer {
+    display: none;
+  }
+  .urgent-wizard {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0 30px;
+  }
+  .urgent-wizard [data-form-step="2"] {
+    border-left: 1px solid var(--line);
+    padding-left: 30px;
+  }
+  .urgent-wizard .form-divider {
+    border: 0;
+    padding-top: 0;
+    margin-top: 0;
+  }
+  .urgent-wizard .urgent-form-footer {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+    margin-top: 12px;
+    gap: 20px;
+  }
+  .urgent-wizard .submit-summary {
+    margin: 0;
+    border: 0;
+    padding: 0;
+  }
+  .urgent-wizard-actions {
+    min-width: 230px;
+  }
+}
+
+@media (max-width: 700px) {
+  [data-role="customer"][data-view="urgent"] .workspace-content {
+    padding: 13px 16px calc(94px + env(safe-area-inset-bottom));
+  }
+  .urgent-customer.is-composing > .page-heading {
+    margin-bottom: 11px;
+    padding-bottom: 10px;
+  }
+  .urgent-customer.is-composing > .page-heading .eyebrow {
+    display: none;
+  }
+  .urgent-customer.is-composing > .page-heading h1 {
+    font-size: 20px;
+    line-height: 1.45;
+  }
+  .urgent-customer.is-composing > .page-heading p:not(.eyebrow) {
+    display: none;
+  }
+  .urgent-customer.is-composing > .segmented-tabs {
+    gap: 24px;
+    margin-bottom: 13px;
+  }
+  .urgent-customer.is-composing > .segmented-tabs button {
+    font-size: 11px;
+    padding-bottom: 10px;
+  }
+  .urgent-customer.is-composing > .notice {
+    font-size: 10px;
+    padding: 9px 12px;
+    margin-bottom: 10px;
+  }
+  .urgent-customer .urgent-wizard {
+    padding: 15px 16px;
+    border-radius: 15px;
+  }
+  .urgent-form-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 13px;
+    margin-bottom: 13px;
+    border-bottom: 1px solid #eee4d9;
+  }
+  .urgent-form-progress > button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 500;
+    color: #807568;
+    min-height: 28px;
+  }
+  .urgent-form-progress > button > span {
+    display: grid;
+    place-items: center;
+    width: 23px;
+    height: 23px;
+    border: 1px solid #e4d9cc;
+    border-radius: 8px;
+    font-size: 10px;
+    background: #fbf7f0;
+  }
+  .urgent-form-progress > button[aria-current="step"] {
+    color: #a64827;
+    font-weight: 600;
+  }
+  .urgent-form-progress > button[aria-current="step"] > span {
+    color: white;
+    background: var(--orange);
+    border-color: var(--orange);
+  }
+  .urgent-form-progress > small {
+    margin-left: auto;
+    font-size: 9px;
+    white-space: nowrap;
+    color: #857867;
+  }
+  .form-progress-line {
+    height: 1px;
+    width: 16px;
+    background: #e5d8c9;
+  }
+  .urgent-wizard[data-current-step="1"] [data-form-step="2"],
+  .urgent-wizard[data-current-step="2"] [data-form-step="1"] {
+    display: none;
+  }
+  .urgent-wizard .section-number {
+    display: none;
+  }
+  .urgent-wizard .section-number > span {
+    display: none;
+  }
+  .urgent-wizard .section-number h2 {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .urgent-wizard .section-number h2:focus {
+    outline: none;
+  }
+  .urgent-wizard .section-number p {
+    font-size: 10px;
+    margin-top: 3px;
+  }
+  .urgent-wizard .field {
+    font-size: 11px;
+    gap: 4px;
+    margin-bottom: 9px;
+  }
+  .urgent-wizard .field-grid {
+    gap: 11px;
+  }
+  .urgent-wizard .field input,
+  .urgent-wizard .field select {
+    min-height: 40px;
+    height: 40px;
+    padding: 8px 10px;
+  }
+  .urgent-wizard .field select {
+    font-size: 12px;
+  }
+  .urgent-wizard .field textarea {
+    min-height: 60px;
+    height: 60px;
+    padding: 9px 10px;
+    resize: vertical;
+  }
+  .urgent-wizard .field input::placeholder,
+  .urgent-wizard .field textarea::placeholder {
+    font-size: 10px;
+  }
+  .urgent-wizard .optional {
+    font-size: 9px;
+  }
+  .urgent-wizard .location-actions {
+    gap: 10px;
+  }
+  .urgent-wizard .location-actions .button {
+    min-height: 39px;
+    padding: 8px 11px;
+    font-size: 10px;
+  }
+  .urgent-wizard .location-actions .text-link {
+    font-size: 10px;
+    min-height: 35px;
+  }
+  .urgent-wizard .dispatch-map {
+    margin-top: 10px;
+  }
+  .urgent-wizard .dispatch-map > div > div:has(> .leaflet-container),
+  .urgent-wizard .dispatch-map .leaflet-container {
+    height: 145px !important;
+  }
+  .urgent-wizard .dispatch-map p {
+    margin-top: 5px;
+    font-size: 9px;
+  }
+  .urgent-wizard .location-confirmed {
+    font-size: 9px;
+    margin-top: 9px;
+  }
+  .urgent-wizard .submit-summary {
+    padding: 0;
+    border: 0;
+    margin: 0 0 10px;
+  }
+  .urgent-wizard .submit-summary p {
+    font-size: 9px;
+  }
+  .urgent-wizard .submit-summary p + p {
+    display: none;
+  }
+  .urgent-wizard[data-current-step="1"] .submit-summary {
+    display: none;
+  }
+  .urgent-wizard .urgent-form-footer {
+    margin-top: 3px;
+    padding-top: 11px;
+    border-top: 1px solid #eee4d9;
+  }
+  .urgent-wizard-actions {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .urgent-wizard-actions .button {
+    min-height: 42px;
+    padding: 10px 13px;
+    font-size: 11px;
+    border-radius: 9px;
+  }
+  .urgent-wizard[data-current-step="1"] .wizard-next {
+    display: inline-flex;
+  }
+  .urgent-wizard[data-current-step="1"] .wizard-submit {
+    display: none;
+  }
+  .urgent-wizard[data-current-step="2"] .wizard-back {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+  .urgent-wizard[data-current-step="2"] .wizard-submit {
+    display: inline-flex;
+    flex: 1;
+  }
+}
+@media (max-width: 370px) {
+  .urgent-form-progress {
+    gap: 6px;
+  }
+  .urgent-form-progress > button {
+    font-size: 9px;
+    gap: 5px;
+  }
+  .urgent-form-progress > small {
+    font-size: 8px;
+  }
+  .form-progress-line {
+    width: 10px;
+  }
+}

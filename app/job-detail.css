@@ -1,0 +1,331 @@
+.expandable-job-text > p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.8;
+}
+.expandable-job-text .is-collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.expandable-job-text > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding-block: 4px;
+  margin-top: 4px;
+  color: #647e50;
+  font-size: 11px;
+  font-weight: 600;
+}
+.expandable-job-text > button svg {
+  transition: transform 0.18s;
+}
+.expandable-job-text > button svg.is-expanded {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 700px) {
+  [data-role="customer"][data-view="job-detail"] .workspace-content {
+    padding: 13px 16px calc(94px + env(safe-area-inset-bottom));
+  }
+  .customer-job-detail > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 11px;
+  }
+  [data-view="job-detail"] .customer-job-detail > header {
+    padding: 14px 15px;
+    gap: 10px;
+  }
+  [data-view="job-detail"] .customer-job-detail > header::before {
+    top: 15px;
+    bottom: 15px;
+  }
+  [data-view="job-detail"] .customer-job-detail > header h1 {
+    font-size: 20px;
+    line-height: 1.4;
+    letter-spacing: -0.5px;
+  }
+  .customer-job-detail > header > div > div {
+    margin-bottom: 6px;
+    gap: 6px;
+  }
+  .customer-job-detail > header > div > div > div:first-child {
+    display: none;
+  }
+  .customer-job-detail > header > div > div > span {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  .customer-job-detail > header > div > p {
+    font-size: 9px;
+    gap: 6px;
+  }
+  .customer-job-detail > header > a {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 9px;
+  }
+  .customer-job-detail > .job-journey {
+    padding: 14px 12px;
+    border-radius: 12px;
+  }
+  .customer-job-detail > .job-journey li {
+    gap: 6px;
+    font-size: 9px;
+  }
+  .customer-job-detail > .job-journey li > span {
+    width: 27px;
+    height: 27px;
+  }
+  .customer-job-detail > .job-journey li > span > svg {
+    width: 15px;
+    height: 15px;
+  }
+  .customer-job-detail > .job-journey > .fine-print {
+    display: none;
+  }
+  .customer-job-detail .job-detail-columns {
+    gap: 11px;
+  }
+  .customer-job-detail .job-detail-main > :not([hidden]) ~ :not([hidden]),
+  .customer-job-detail .job-detail-sidebar > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 11px;
+  }
+
+  /* The assigned technician is a contact row, rather than a large profile card. */
+  .customer-job-detail .assigned-card-heading {
+    padding: 9px 13px;
+    gap: 7px;
+  }
+  .customer-job-detail .assigned-card-heading > div {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+  }
+  .customer-job-detail .assigned-card-heading > div svg {
+    width: 14px;
+    height: 14px;
+  }
+  .customer-job-detail .assigned-card-heading h2 {
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .customer-job-detail .assigned-card-body {
+    padding: 13px;
+  }
+  .customer-job-detail
+    .assigned-card-body:is(
+      [data-job-status="accepted"],
+      [data-job-status="on_the_way"],
+      [data-job-status="in_progress"]
+    ) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+  }
+  .customer-job-detail .assigned-identity {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 3px 10px;
+    align-items: center;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+  }
+  .customer-job-detail .assigned-avatar {
+    width: 42px;
+    height: 42px;
+    grid-row: 1 / 3;
+    margin: 0;
+    font-size: 19px;
+    box-shadow: none;
+    border-radius: 13px;
+    --tw-ring-shadow: 0 0 transparent;
+  }
+  .customer-job-detail .assigned-identity h3 {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.6;
+    margin: 0;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .customer-job-detail .assigned-identity > span {
+    font-size: 10px;
+    border: 0;
+    background: none;
+    border-radius: 0;
+    padding: 0;
+    gap: 4px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .customer-job-detail .assigned-identity > span > svg {
+    width: 11px;
+    height: 11px;
+  }
+  .customer-job-detail .assigned-actions {
+    padding: 0;
+    border: 0;
+  }
+  .customer-job-detail .assigned-actions > form > button {
+    padding: 9px 11px;
+    min-height: 39px;
+    font-size: 11px;
+    gap: 6px;
+    border-radius: 9px;
+    box-shadow: none;
+    white-space: nowrap;
+  }
+  .customer-job-detail .assigned-actions > form > button > svg {
+    width: 15px;
+    height: 15px;
+  }
+  .customer-job-detail
+    .assigned-card-body:not(
+      :is(
+        [data-job-status="accepted"],
+        [data-job-status="on_the_way"],
+        [data-job-status="in_progress"]
+      )
+    )
+    .assigned-actions {
+    margin-top: 12px;
+  }
+  [data-view="job-detail"] .customer-job-detail .assigned-empty {
+    padding: 15px 13px;
+    gap: 4px;
+  }
+  .customer-job-detail .assigned-empty > div {
+    display: none;
+  }
+  .customer-job-detail .assigned-empty h3 {
+    font-size: 12px;
+    margin: 0;
+  }
+  .customer-job-detail .assigned-empty > p {
+    font-size: 10px;
+    line-height: 1.8;
+  }
+
+  /* Keep the issue, address and appointment visible without repeating large labels. */
+  .customer-job-detail .job-facts-heading {
+    padding: 9px 13px;
+    gap: 7px;
+  }
+  .customer-job-detail .job-facts-heading > div {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+  }
+  .customer-job-detail .job-facts-heading > div svg {
+    width: 14px;
+    height: 14px;
+  }
+  .customer-job-detail .job-facts-heading h2 {
+    font-size: 12px;
+    font-weight: 600;
+  }
+  [data-view="job-detail"] .customer-job-detail .job-facts-body {
+    padding: 13px;
+  }
+  .customer-job-detail .job-facts-body > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 12px;
+  }
+  .customer-job-detail .job-facts-body h3 {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0;
+    margin-bottom: 5px;
+  }
+  .customer-job-detail .job-facts-body > div:first-child > div {
+    padding: 9px 10px;
+    border-radius: 8px;
+    background: #f6f8f1;
+  }
+  .customer-job-detail .expandable-job-text > p {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.75;
+  }
+  .customer-job-detail .expandable-job-text .is-collapsed {
+    -webkit-line-clamp: 2;
+  }
+  .customer-job-detail .expandable-job-text > button {
+    font-size: 10px;
+    padding-bottom: 0;
+    margin-top: 2px;
+  }
+  .customer-job-detail .job-facts-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    padding-top: 11px;
+    gap: 12px 13px;
+  }
+  .customer-job-detail .job-facts-grid > div {
+    min-width: 0;
+  }
+  .customer-job-detail .job-facts-grid > div:first-child {
+    grid-column: 1 / -1;
+  }
+  .customer-job-detail .job-facts-grid > div > p {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.7;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+  .customer-job-detail .job-facts-grid > div > span {
+    font-size: 10px;
+    padding: 3px 7px;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+  .customer-job-detail .job-facts-grid .job-final-price {
+    grid-column: 1 / -1;
+    padding: 10px 12px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-radius: 9px;
+  }
+  .customer-job-detail .job-facts-grid .job-final-price > h3 {
+    margin: 0;
+    color: #4f7440;
+  }
+  .customer-job-detail .job-facts-grid .job-final-price > p {
+    font-size: 18px;
+    font-weight: 600;
+    color: #3f6b33;
+  }
+}
+@media (max-width: 370px) {
+  .customer-job-detail
+    .assigned-card-body:is(
+      [data-job-status="accepted"],
+      [data-job-status="on_the_way"],
+      [data-job-status="in_progress"]
+    ) {
+    gap: 7px;
+  }
+  .customer-job-detail .assigned-actions > form > button {
+    font-size: 10px;
+    padding-inline: 8px;
+  }
+  .customer-job-detail .assigned-actions > form > button > svg {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .expandable-job-text > button svg {
+    transition: none;
+  }
+}

@@ -24,6 +24,7 @@ export async function searchTechnicians(
   lat: number,
   lng: number,
   categoryId?: string,
+  search?: string,
 ): Promise<TechnicianExploreResult[]> {
   let query = `
     SELECT tp.id, tp.user_id, u.full_name, u.avatar_url, tp.bio, tp.years_experience,
@@ -40,7 +41,7 @@ export async function searchTechnicians(
     JOIN technician_services ts ON ts.technician_id = tp.id
     JOIN service_categories c ON ts.category_id = c.id
   `;
-  
+
   const params: any[] = [lat, lng, lat];
 
   if (categoryId) {
@@ -50,7 +51,15 @@ export async function searchTechnicians(
     query += ` WHERE tp.is_available = TRUE `;
   }
 
-  query += `
+  if (search?.trim()) {
+    const term = search
+      .trim()
+      .slice(0, 100)
+      .replace(/^(ล้าง|ติดตั้ง|ซ่อม|ระบบ)/, "");
+    query += ` AND (c.name LIKE ? OR ts.description LIKE ? OR u.full_name LIKE ?) `;
+    params.push(`%${term}%`, `%${term}%`, `%${term}%`);
+  }
+  query += ` AND u.status = 'active' AND c.is_active = 1
     GROUP BY ts.id
     HAVING distance <= tp.service_radius_km
     ORDER BY distance ASC
@@ -58,13 +67,16 @@ export async function searchTechnicians(
 
   const [rows] = await db.execute<RowDataPacket[]>(query, params);
 
-  return rows.map(row => ({
+  return rows.map((row) => ({
     id: String(row.ts_id), // Use ts_id so each card has a unique key
     userId: String(row.user_id),
     fullName: row.full_name,
     avatarUrl: row.avatar_url,
     bio: row.bio,
-    yearsExperience: row.service_experience_years != null ? row.service_experience_years : row.years_experience,
+    yearsExperience:
+      row.service_experience_years != null
+        ? row.service_experience_years
+        : row.years_experience,
     averageRating: parseFloat(row.average_rating),
     totalReviews: row.total_reviews,
     distanceKm: parseFloat(row.distance),

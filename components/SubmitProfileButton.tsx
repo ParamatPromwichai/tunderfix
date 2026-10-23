@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 
-export function SubmitProfileButton({ themeColor = "emerald" }: { themeColor?: "emerald" | "sky" }) {
+export function SubmitProfileButton({ themeColor = "amber" }: { themeColor?: "emerald" | "sky" | "amber" }) {
   const { pending } = useFormStatus();
   const searchParams = useSearchParams();
   const [isSuccess, setIsSuccess] = useState(false);
@@ -17,7 +17,7 @@ export function SubmitProfileButton({ themeColor = "emerald" }: { themeColor?: "
     }
   }, [searchParams]);
 
-  const baseColor = themeColor === "emerald" ? "bg-emerald-600 hover:bg-emerald-700" : "bg-sky-600 hover:bg-sky-700";
+  const baseColor = themeColor === "amber" ? "bg-orange-700 hover:bg-orange-800" : themeColor === "emerald" ? "bg-emerald-600 hover:bg-emerald-700" : "bg-sky-600 hover:bg-sky-700";
 
   return (
     <button 

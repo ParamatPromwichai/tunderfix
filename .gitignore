@@ -12,9 +12,12 @@
 
 # testing
 /coverage
+/.qa-db/
+/.qa/
 
 # next.js
 /.next/
+/.next-qa/
 /out/
 
 # production

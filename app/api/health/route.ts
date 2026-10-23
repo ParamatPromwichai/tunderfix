@@ -7,7 +7,14 @@ export async function GET() {
   try {
     const health = await getHealthStatus();
 
-    return successResponse(health);
+    const isolatedQa =
+      process.env.THUNDERFIX_QA === "1" &&
+      process.env.DB_NAME === "thunderfix_qa" &&
+      process.env.DB_PORT === "3307";
+    return successResponse({
+      ...health,
+      ...(isolatedQa ? { isolatedQa: true } : {}),
+    });
   } catch (error) {
     console.error("[GET /api/health] Database health check failed", error);
 

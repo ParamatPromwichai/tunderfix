@@ -46,9 +46,22 @@ export function requireRole(role: UserRole) {
   };
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   try {
     const pathname = request.nextUrl.pathname;
+
+    if (pathname.startsWith("/dashboard/")) {
+      const user = await requireAuth()(request);
+      if (
+        !pathname.startsWith(`/dashboard/${user.role}/`) &&
+        pathname !== `/dashboard/${user.role}`
+      ) {
+        return NextResponse.redirect(
+          new URL(`/dashboard/${user.role}`, request.url),
+        );
+      }
+      return NextResponse.next();
+    }
 
     if (pathname === "/api/auth/me") {
       await requireAuth()(request);
@@ -71,6 +84,14 @@ export async function middleware(request: NextRequest) {
 
     return NextResponse.next();
   } catch (error) {
+    if (request.nextUrl.pathname.startsWith("/dashboard/")) {
+      const login = new URL("/login", request.url);
+      login.searchParams.set(
+        "next",
+        request.nextUrl.pathname + request.nextUrl.search,
+      );
+      return NextResponse.redirect(login);
+    }
     if (error instanceof MiddlewareForbiddenError) {
       return NextResponse.json(
         {
@@ -103,6 +124,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/dashboard/:path*",
     "/api/auth/me",
     "/api/customer/:path*",
     "/api/technician/:path*",

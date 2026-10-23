@@ -1,0 +1,873 @@
+/* Explicit mobile type scale; desktop presentation stays in the page styles. */
+.mobile-command-icon,
+.mobile-short-label {
+  display: none;
+}
+.mobile-full-label {
+  font-weight: inherit;
+}
+
+@media (max-width: 700px) {
+  body {
+    --mobile-body: 16px;
+    --mobile-secondary: 13px;
+    --mobile-label: 14px;
+    --mobile-caption: 12px;
+    font-size: var(--mobile-body);
+  }
+
+  /* Utility-based pages: lists, profiles, services, reviews and requests. */
+  body
+    :is(.dashboard-shell, .landing, .auth-page, .partner-offer-sheet)
+    :is(.text-xs, .text-\[10px\], .text-\[11px\], .text-\[12px\]) {
+    font-size: var(--mobile-secondary);
+    line-height: 1.65;
+  }
+  body
+    :is(.dashboard-shell, .landing, .auth-page, .partner-offer-sheet)
+    :is(.text-sm, .text-\[13px\]) {
+    font-size: var(--mobile-body);
+    line-height: 1.65;
+  }
+  .dashboard-shell .route-surface .text-\[15px\] {
+    font-size: 17px;
+    line-height: 1.55;
+  }
+  .dashboard-shell
+    .route-surface
+    :is(
+      input:not([type="hidden"]):not([type="radio"]):not([type="checkbox"]):not(
+          [type="file"]
+        ),
+      select,
+      textarea
+    ),
+  .auth-page :is(input, select, textarea),
+  .partner-offer-sheet :is(input, textarea) {
+    font-size: 16px;
+    min-height: 44px;
+  }
+  .dashboard-shell .route-surface :is(input, textarea)::placeholder,
+  .auth-page input::placeholder {
+    font-size: 14px;
+  }
+  .dashboard-shell :is(.button, .text-link),
+  .landing :is(.button, .text-link),
+  .auth-page .button {
+    font-size: 15px;
+    min-height: 44px;
+  }
+  .dashboard-shell :is(.notice, .fine-print, .location-confirmed),
+  .dispatch-toast p {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+  .dashboard-shell .notice {
+    overflow-wrap: anywhere;
+  }
+  .dashboard-shell .status-pill {
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: normal;
+  }
+  .dashboard-shell :is(.section-heading, .overview-section-title) h2 {
+    font-size: 18px;
+    line-height: 1.55;
+  }
+  .dashboard-shell .ui-page-header h1 {
+    font-size: 23px;
+    white-space: normal;
+    overflow: visible;
+  }
+  .dashboard-shell .ui-page-header p {
+    font-size: 13px;
+  }
+  .dashboard-shell .page-heading h1 {
+    font-size: 23px;
+    white-space: normal;
+    line-height: 1.45;
+  }
+  .dashboard-shell .page-heading .outline-label {
+    display: none;
+  }
+
+  /* Hide optional narration, never prices, user-entered details or errors. */
+  .ui-page-header p[data-mobile-optional],
+  .dashboard-overview .page-heading p,
+  .mobile-optional-copy,
+  .dashboard-shell[data-view="review"] .route-surface > div > header > p,
+  .dashboard-overview .overview-banner .eyebrow,
+  .overview-section-title > .eyebrow,
+  .partner-page-heading > div > p,
+  .partner-sheet-heading p,
+  .partner-feed-tools p,
+  .partner-my-offer-bottom > p,
+  .partner-job-heading > div:first-child > span,
+  .partner-quote-hint,
+  .dispatch-wait-status p,
+  .dispatch-wait-steps,
+  .dispatch-scene-bottom > span:last-child,
+  .urgent-form-progress > small,
+  .urgent-wizard .section-number p,
+  .scheduled-job-page .job-suggestions,
+  .job-journey > .fine-print,
+  .login-form > .eyebrow,
+  .auth-subtitle,
+  .role-choice small,
+  .hero-copy > .eyebrow,
+  .hero-footnotes,
+  .hero-urgent-button small {
+    display: none;
+  }
+
+  /* Familiar commands become 44px icon targets, with accessible names in markup. */
+  .mobile-command-label,
+  .mobile-full-label {
+    display: none;
+  }
+  .mobile-short-label {
+    display: inline;
+    font-weight: inherit;
+  }
+  svg.mobile-command-icon {
+    display: block;
+    flex-shrink: 0;
+  }
+  body .mobile-icon-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    gap: 0;
+  }
+  body .mobile-icon-action > svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+  .dashboard-shell .workspace-bottomnav > a,
+  .landing .public-dock > a {
+    font-size: 12px;
+    line-height: 1.3;
+    gap: 4px;
+    min-width: 0;
+  }
+  .dashboard-shell .workspace-bottomnav {
+    height: 76px;
+  }
+  .dashboard-shell .side-link {
+    font-size: 15px;
+    min-height: 46px;
+  }
+  .dashboard-shell :is(.sidebar-label, .sidebar-user small, .logout-small) {
+    font-size: 13px;
+  }
+  .dashboard-shell .sidebar-user strong {
+    font-size: 15px;
+  }
+
+  /* Overview: let content grow naturally as the text gets larger. */
+  .dashboard-shell.is-overview .workspace-content {
+    height: auto;
+    min-height: 0;
+    padding-bottom: calc(104px + env(safe-area-inset-bottom));
+  }
+  .dashboard-shell .dashboard-overview {
+    height: auto;
+    gap: 16px;
+  }
+  .dashboard-shell .dashboard-overview .page-heading {
+    min-height: 0;
+  }
+  .dashboard-shell .dashboard-overview .overview-banner {
+    min-height: 0;
+    padding: 16px;
+    gap: 12px;
+  }
+  .dashboard-shell .dashboard-overview .overview-banner h2 {
+    font-size: 21px;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .dashboard-shell .dashboard-overview .overview-banner > .button {
+    font-size: 15px;
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+  .dashboard-shell .dashboard-overview .overview-banner .status-pill {
+    position: static;
+    max-width: none;
+    font-size: 12px;
+    margin-top: 8px;
+    padding: 5px 8px;
+    width: fit-content;
+  }
+  .dashboard-shell
+    .dashboard-overview
+    .overview-banner
+    > div:not(.dispatch-orbit) {
+    padding-right: 44px;
+  }
+  .dashboard-shell .dashboard-overview .dispatch-orbit {
+    opacity: 0.6;
+    width: 62px;
+    height: 62px;
+  }
+  .dashboard-shell .dashboard-overview .quick-actions > a {
+    font-size: 13px;
+    line-height: 1.5;
+    gap: 7px;
+  }
+  .dashboard-shell .dashboard-overview .quick-actions > a > span {
+    width: 44px;
+    height: 44px;
+  }
+  .dashboard-shell .dashboard-overview .metric-strip small {
+    font-size: 12px;
+    line-height: 1.5;
+    min-height: 36px;
+    white-space: normal;
+    display: block;
+  }
+  .dashboard-shell .dashboard-overview .metric-strip > div {
+    padding-inline: 6px;
+  }
+  .dashboard-shell .dashboard-overview .metric-strip strong {
+    font-size: 25px;
+  }
+  .dashboard-shell .overview-tabs button {
+    font-size: 14px;
+    min-height: 44px;
+  }
+  .dashboard-shell .overview-tabs-hint {
+    display: none;
+  }
+  .dashboard-shell .overview-panel.is-selected {
+    overflow: visible;
+  }
+  .dashboard-shell .overview-panel .overview-section-title h2 {
+    font-size: 17px;
+  }
+  .dashboard-shell .overview-panel .empty-panel h3,
+  .dashboard-shell .overview-panel .job-row h3,
+  .dashboard-shell .overview-panel .notification-row strong {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .dashboard-shell .overview-panel .job-row-heading {
+    flex-wrap: wrap;
+  }
+  .dashboard-shell
+    .overview-panel
+    :is(.job-row p, .notification-row p, .empty-panel p) {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .dashboard-shell .overview-panel .job-row p.line-clamp-2 {
+    display: none;
+  }
+  .dashboard-shell .overview-panel .notification-row time {
+    font-size: 12px;
+  }
+  .dashboard-shell .empty-panel p {
+    font-size: 14px;
+  }
+
+  /* Search and status filters scroll horizontally rather than shrinking labels. */
+  .dashboard-shell .job-filter-tabs {
+    overflow-x: auto;
+    justify-content: start;
+    gap: 5px;
+    scrollbar-width: thin;
+  }
+  .dashboard-shell .job-filter-tabs button {
+    font-size: 14px;
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 9px 12px;
+    gap: 7px;
+  }
+  .dashboard-shell .job-filter-tabs button > span {
+    font-size: 12px;
+    min-width: 21px;
+    height: 21px;
+  }
+  .dashboard-shell :is(.filter-result, .filter-empty p) {
+    font-size: 13px;
+  }
+  .dashboard-shell .job-search input::placeholder {
+    font-size: 14px;
+  }
+  .dashboard-shell .filter-result > button {
+    margin-left: auto;
+  }
+  .dashboard-shell .home-search button {
+    min-height: 44px;
+  }
+
+  /* Forms: readable labels and real 16px input text on both roles. */
+  .dashboard-shell .urgent-wizard .field,
+  .auth-page .auth-fields .field {
+    font-size: 14px;
+    gap: 6px;
+    margin-bottom: 13px;
+  }
+  .dashboard-shell .urgent-wizard .field select,
+  .dashboard-shell .scheduled-wizard .scheduled-step select {
+    font-size: 16px;
+    height: 44px;
+  }
+  .dashboard-shell .urgent-wizard .field input {
+    height: 44px;
+  }
+  .dashboard-shell .urgent-wizard .field :is(input, textarea)::placeholder,
+  .dashboard-shell .scheduled-step :is(input, textarea)::placeholder {
+    font-size: 14px;
+  }
+  .dashboard-shell .urgent-wizard .optional {
+    font-size: 12px;
+  }
+  .dashboard-shell .urgent-form-progress {
+    flex-wrap: wrap;
+    gap: 9px;
+  }
+  .dashboard-shell .scheduled-progress {
+    flex-wrap: wrap;
+  }
+  .dashboard-shell
+    .route-surface
+    label
+    > :is(.text-\[10px\], .text-\[11px\], .text-xs) {
+    font-size: 14px;
+  }
+  .dashboard-shell .urgent-form-progress > button,
+  .dashboard-shell .scheduled-progress button {
+    font-size: 14px;
+    min-height: 36px;
+  }
+  .dashboard-shell .urgent-form-progress > button > span,
+  .dashboard-shell .scheduled-progress button > span {
+    font-size: 12px;
+    width: 25px;
+    height: 25px;
+  }
+  .dashboard-shell .segmented-tabs button,
+  .dashboard-shell
+    .urgent-customer:is(.is-composing, .is-tracking)
+    > .segmented-tabs
+    button {
+    font-size: 15px;
+    min-height: 44px;
+  }
+  .dashboard-shell .urgent-wizard .location-actions {
+    flex-wrap: wrap;
+  }
+  .dashboard-shell .urgent-wizard .location-actions .button,
+  .dashboard-shell .scheduled-location-actions .button {
+    font-size: 14px;
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+  .dashboard-shell .urgent-wizard .location-actions .text-link,
+  .dashboard-shell .scheduled-location-actions .text-link {
+    font-size: 14px;
+    min-height: 40px;
+  }
+  .dashboard-shell .urgent-wizard .submit-summary p {
+    font-size: 13px;
+  }
+  .dashboard-shell .urgent-wizard .dispatch-map p,
+  .dashboard-shell .scheduled-map p {
+    font-size: 12px;
+  }
+  .dashboard-shell .urgent-wizard .location-confirmed,
+  .dashboard-shell .scheduled-step .location-confirmed {
+    font-size: 13px;
+  }
+  .dashboard-shell .urgent-wizard-actions .button,
+  .dashboard-shell .scheduled-footer > button {
+    font-size: 15px;
+    min-height: 46px;
+  }
+  .dashboard-shell .scheduled-step label,
+  .dashboard-shell .scheduled-date-grid label {
+    font-size: 14px;
+    letter-spacing: 0;
+  }
+  .dashboard-shell .scheduled-wizard > .scheduled-error {
+    font-size: 14px;
+  }
+  .dashboard-shell[data-view="profile"] .ui-card h2 {
+    font-size: 18px;
+  }
+  .dashboard-shell[data-view="profile"] .ui-card > .flex:first-child p {
+    font-size: 13px;
+  }
+  .dashboard-shell[data-view="profile"] .ui-card > .flex:first-child button {
+    font-size: 13px;
+    min-height: 40px;
+  }
+  .dashboard-shell[data-view="profile"]
+    .ui-card
+    > .flex:first-child
+    button.mobile-icon-action {
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+  .dashboard-shell .service-tile button[aria-label],
+  .dashboard-shell .service-editor button[aria-label] {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Customer dispatch: keep the actual job and deadline, trim repeated narration. */
+  .dashboard-shell
+    .urgent-customer:is(.is-composing, .is-tracking)
+    > .page-heading
+    h1 {
+    font-size: 23px;
+  }
+  .dashboard-shell .dispatch-tracking-heading h2 {
+    font-size: 17px;
+  }
+  .dashboard-shell .dispatch-live-label {
+    font-size: 13px;
+  }
+  .dashboard-shell .dispatch-motion-toggle {
+    width: 40px;
+    height: 40px;
+  }
+  .dashboard-shell .dispatch-radius-label {
+    font-size: 12px;
+  }
+  .dashboard-shell .dispatch-radar-caption {
+    font-size: 11px;
+  }
+  .dashboard-shell .dispatch-scene-bottom > span {
+    font-size: 12px;
+  }
+  .dashboard-shell .dispatch-kicker {
+    font-size: 13px;
+  }
+  .dashboard-shell .dispatch-wait-heading h2 {
+    font-size: 21px;
+  }
+  .dashboard-shell .dispatch-countdown > span {
+    font-size: 12px;
+  }
+  .dashboard-shell .dispatch-countdown strong {
+    font-size: 26px;
+  }
+  .dashboard-shell .dispatch-job-description .expandable-job-text p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .dashboard-shell .dispatch-job-description .expandable-job-text button {
+    font-size: 13px;
+    min-height: 36px;
+  }
+  .dashboard-shell .dispatch-wait-status h3 {
+    font-size: 14px;
+  }
+  .dashboard-shell .dispatch-wait-status {
+    margin-bottom: 15px;
+  }
+  .dashboard-shell .dispatch-search-footer {
+    flex-wrap: wrap;
+    gap: 0 12px;
+    padding-top: 7px;
+  }
+  .dashboard-shell .dispatch-search-footer > span {
+    font-size: 12px;
+  }
+  .dashboard-shell .dispatch-search-footer > button {
+    font-size: 13px;
+    min-height: 44px;
+    margin-left: auto;
+  }
+  .dashboard-shell .dispatch-quote-person strong {
+    font-size: 16px;
+  }
+  .dashboard-shell .dispatch-quote-person p,
+  .dashboard-shell .dispatch-quote-price span {
+    font-size: 12px;
+  }
+  .dashboard-shell .dispatch-quote-note,
+  .dashboard-shell .dispatch-price-note {
+    font-size: 14px;
+  }
+  .dashboard-shell .dispatch-quote .button {
+    font-size: 15px;
+    min-height: 44px;
+  }
+  .dashboard-shell .dispatch-history > summary {
+    font-size: 15px;
+    min-height: 48px;
+  }
+  .dashboard-shell .dispatch-past-job h3 {
+    font-size: 16px;
+  }
+  .dashboard-shell .dispatch-past-job p,
+  .dashboard-shell .dispatch-past-status {
+    font-size: 12px;
+  }
+  .dashboard-shell .dispatch-past-job > a {
+    font-size: 14px;
+    min-height: 40px;
+  }
+  .dashboard-shell .dispatch-tracking-empty p {
+    font-size: 14px;
+  }
+
+  /* Partner dispatch uses the same scale, including the quote sheet. */
+  .dashboard-shell .partner-page-heading h1 {
+    font-size: 23px;
+  }
+  .dashboard-shell .partner-availability h2 {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  .dashboard-shell .partner-availability-copy > p {
+    font-size: 12px;
+  }
+  .dashboard-shell .partner-availability-symbol {
+    display: none;
+  }
+  .dashboard-shell .partner-availability-bottom > span:first-child {
+    font-size: 12px;
+  }
+  .dashboard-shell .partner-live-mark {
+    font-size: 11px;
+  }
+  .dashboard-shell .partner-dispatch-tabs > button {
+    font-size: 14px;
+    min-height: 44px;
+    gap: 7px;
+  }
+  .dashboard-shell .partner-dispatch-tabs > button > span {
+    font-size: 12px;
+    width: 21px;
+    height: 21px;
+  }
+  .dashboard-shell .partner-feed-tools h2 {
+    font-size: 18px;
+  }
+  .dashboard-shell .partner-feed-actions > select {
+    font-size: 13px;
+    max-width: 115px;
+    min-height: 40px;
+  }
+  .dashboard-shell .partner-feed-actions > button {
+    width: 44px;
+    height: 44px;
+  }
+  .dashboard-shell .partner-job-tag,
+  .dashboard-shell .partner-job-category,
+  .dashboard-shell .partner-job-number {
+    font-size: 12px;
+  }
+  .dashboard-shell .partner-job-heading h3 {
+    font-size: 20px;
+  }
+  .dashboard-shell .partner-job-distance > span {
+    font-size: 12px;
+  }
+  .dashboard-shell .partner-job-distance {
+    grid-template-columns: auto minmax(0, 1fr);
+    max-width: 110px;
+  }
+  .dashboard-shell .partner-job-description .expandable-job-text > p {
+    font-size: 15px;
+  }
+  .dashboard-shell .partner-job-description .expandable-job-text > button {
+    font-size: 13px;
+    min-height: 36px;
+  }
+  .dashboard-shell .partner-job-facts span {
+    font-size: 12px;
+  }
+  .dashboard-shell .partner-job-facts strong {
+    font-size: 15px;
+  }
+  .dashboard-shell .partner-job-facts .partner-time {
+    font-size: 20px;
+  }
+  .dashboard-shell .partner-job .partner-offer-button {
+    font-size: 15px;
+    min-height: 46px;
+  }
+  .dashboard-shell .partner-job-offered {
+    font-size: 14px;
+    padding: 8px;
+    text-align: center;
+  }
+  .dashboard-shell .partner-manual-location {
+    font-size: 14px;
+  }
+  .dashboard-shell .partner-feed-empty h3 {
+    font-size: 18px;
+  }
+  .dashboard-shell .partner-feed-empty p,
+  .dashboard-shell .partner-feed-empty > a,
+  .dashboard-shell .partner-location-picker > p {
+    font-size: 14px;
+  }
+  .dashboard-shell .partner-my-offer-status,
+  .dashboard-shell .partner-my-offer-top > span:last-child {
+    font-size: 12px;
+  }
+  .dashboard-shell .partner-my-offer h3 {
+    font-size: 18px;
+  }
+  .dashboard-shell .partner-my-offer-bottom span {
+    font-size: 13px;
+  }
+  .dashboard-shell .partner-my-offer-bottom .button {
+    font-size: 14px;
+    min-height: 44px;
+  }
+  .dashboard-shell .partner-offer-history summary {
+    font-size: 15px;
+  }
+  .dashboard-shell .partner-offer-history summary b,
+  .dashboard-shell .dispatch-history summary b {
+    font-size: 12px;
+  }
+  .dashboard-shell .partner-no-pending {
+    font-size: 14px;
+  }
+  .dashboard-shell .partner-sent-notice {
+    font-size: 14px;
+  }
+  .partner-offer-sheet .partner-quote-fields label,
+  .partner-offer-sheet .partner-quote-note {
+    font-size: 15px;
+  }
+  .partner-offer-sheet .partner-quote-fields label > span,
+  .partner-offer-sheet .partner-quote-note > span {
+    font-size: 12px;
+  }
+  .partner-offer-sheet .partner-sheet-job strong {
+    font-size: 16px;
+  }
+  .partner-offer-sheet .partner-sheet-job p {
+    font-size: 13px;
+  }
+  .partner-offer-sheet .partner-eta-options > span {
+    display: none;
+  }
+  .partner-offer-sheet .partner-eta-options > button {
+    flex: 1;
+    font-size: 14px;
+    min-height: 38px;
+  }
+  .partner-offer-sheet .partner-sheet-footer > p {
+    font-size: 13px;
+  }
+  .partner-offer-sheet .partner-sheet-footer .button {
+    font-size: 15px;
+    min-height: 46px;
+  }
+
+  /* Job detail and conversations: people, address, price and messages stay readable. */
+  .dashboard-shell .customer-job-detail .assigned-card-heading h2,
+  .dashboard-shell .customer-job-detail .job-facts-heading h2 {
+    font-size: 16px;
+  }
+  .dashboard-shell .customer-job-detail .assigned-identity h3 {
+    font-size: 17px;
+  }
+  .dashboard-shell .customer-job-detail .assigned-identity > span {
+    font-size: 13px;
+  }
+  .dashboard-shell
+    .customer-job-detail
+    .assigned-actions
+    > form
+    > .mobile-icon-action {
+    width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+  .dashboard-shell
+    .customer-job-detail
+    .assigned-actions
+    > form
+    > .mobile-icon-action
+    > svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+  .dashboard-shell .customer-job-detail .job-facts-body h3 {
+    font-size: 13px;
+  }
+  .dashboard-shell .customer-job-detail .expandable-job-text > p,
+  .dashboard-shell .customer-job-detail .job-facts-grid > div > p {
+    font-size: 15px;
+  }
+  .dashboard-shell .customer-job-detail .expandable-job-text > button {
+    font-size: 13px;
+    min-height: 36px;
+  }
+  .dashboard-shell .customer-job-detail .job-facts-grid > div > span {
+    font-size: 13px;
+  }
+  .dashboard-shell .customer-job-detail .job-facts-grid .job-final-price > p {
+    font-size: 22px;
+  }
+  .dashboard-shell .customer-job-detail .assigned-empty > p {
+    font-size: 14px;
+  }
+  .dashboard-shell .customer-job-detail .assigned-empty h3 {
+    font-size: 17px;
+  }
+  .dashboard-shell .customer-job-detail > header > div > div > span {
+    font-size: 12px;
+  }
+  .dashboard-shell .customer-job-detail > header > div > p {
+    font-size: 12px;
+  }
+  .dashboard-shell .job-journey li,
+  .dashboard-shell .customer-job-detail > .job-journey li {
+    font-size: 12px;
+  }
+  .dashboard-shell .journey-action {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .dashboard-shell .journey-action p {
+    font-size: 13px;
+  }
+  .dashboard-shell .journey-action .button {
+    font-size: 15px;
+    min-height: 44px;
+  }
+  .dashboard-shell .conversation > header h2 {
+    font-size: 17px;
+  }
+  .dashboard-shell .conversation > header p {
+    font-size: 13px;
+  }
+  .dashboard-shell .chat-bubble {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  .dashboard-shell .chat-bubble > p:last-child:not(:first-child) {
+    font-size: 12px;
+  }
+  .dashboard-shell .conversation form button[type="submit"] {
+    width: 46px;
+    min-width: 46px;
+    height: 46px;
+    padding: 10px;
+    display: grid;
+    place-items: center;
+  }
+  .dashboard-shell .conversation form input::placeholder {
+    font-size: 15px;
+  }
+  .dispatch-toast strong {
+    font-size: 16px;
+  }
+  .dispatch-toast a {
+    font-size: 14px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Public entry and authentication have the same readable mobile baseline. */
+  .landing .announcement {
+    font-size: 12px;
+  }
+  .landing .landing-header .button {
+    font-size: 14px;
+    min-height: 44px;
+  }
+  .landing .hero-description,
+  .landing .hero-alternative {
+    font-size: 15px;
+    line-height: 1.75;
+  }
+  .landing .hero-urgent-button strong {
+    font-size: 21px;
+  }
+  .landing .service-strip-inner > a > span {
+    font-size: 13px;
+  }
+  .landing
+    :is(
+      .service-editorial p,
+      .how-steps p,
+      .partner-invite p,
+      .home-faq details p
+    ) {
+    font-size: 15px;
+    line-height: 1.75;
+  }
+  .landing
+    :is(.editorial-link, .home-faq summary, .section-heading > .text-link) {
+    font-size: 15px;
+    min-height: 44px;
+  }
+  .landing .how-steps h3 {
+    font-size: 18px;
+  }
+  .landing .landing-footer > div > span {
+    font-size: 12px;
+  }
+  .auth-page .login-form h2 {
+    font-size: 25px;
+    margin-bottom: 22px;
+  }
+  .auth-page .auth-fields .field input {
+    font-size: 16px;
+  }
+  .auth-page .auth-fields .field input::placeholder {
+    font-size: 14px;
+  }
+  .auth-page .auth-toggle,
+  .auth-page .auth-toggle > button {
+    font-size: 14px;
+  }
+  .auth-page .role-choice legend {
+    font-size: 15px;
+  }
+  .auth-page .role-choice strong {
+    font-size: 15px;
+  }
+  .auth-page .role-choice {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .dashboard-shell .scheduled-date-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dashboard-shell .partner-job-heading {
+    flex-wrap: wrap;
+  }
+  .dashboard-shell .partner-job-distance {
+    border-left: 0;
+    padding-left: 0;
+    display: flex;
+    gap: 6px;
+    max-width: none;
+  }
+  .dashboard-shell .partner-job-distance strong {
+    font-size: 23px;
+  }
+  .dashboard-shell .dispatch-quote {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

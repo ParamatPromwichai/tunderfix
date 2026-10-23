@@ -1,8 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MapPicker } from "@/components/MapPicker";
+import { CategoryRail } from "@/components/CategoryRail";
+import { Check, LoaderCircle, MapPin } from "lucide-react";
+import {
+  decodeExplorePin,
+  explorePinKey,
+  exploreUrl,
+  saveExplorePin,
+  type ExplorePin,
+} from "@/lib/explore-location";
+import type { TechnicianExploreResult } from "@/repositories/technicians-explore.repository";
 
 export function ExploreFilters({
   categories,
@@ -10,72 +20,173 @@ export function ExploreFilters({
   latitude,
   longitude,
   technicians,
-  hasLocationParam
+  hasLocationParam,
+  userId,
 }: {
-  categories: any[];
+  categories: { id: string; name: string }[];
   category?: string;
   latitude: number;
   longitude: number;
-  technicians: any[];
-  hasLocationParam?: boolean;
+  technicians: TechnicianExploreResult[];
+  hasLocationParam: boolean;
+  userId: string;
 }) {
   const router = useRouter();
-
-  const handleSearch = (newCat: string, newLat: number, newLng: number) => {
-    if (newCat === (category || "") && newLat === latitude && newLng === longitude) {
+  const params = useSearchParams();
+  const query = params.get("q") || "";
+  const [pending, startTransition] = useTransition();
+  const [pin, setPin] = useState<ExplorePin>({ latitude, longitude });
+  const [selected, setSelected] = useState(category || "");
+  const [saved, setSaved] = useState(false);
+  const [locating, setLocating] = useState(false);
+  const manualPin = useRef(false);
+  const confirmedPin = useRef(hasLocationParam);
+  const key = explorePinKey(userId);
+  const remember = useCallback(
+    (next: ExplorePin) => {
+      try {
+        setSaved(saveExplorePin(localStorage, key, next));
+      } catch {
+        setSaved(false);
+      }
+    },
+    [key],
+  );
+  function navigate(nextCategory: string, nextPin: ExplorePin) {
+    if (
+      nextCategory === (category || "") &&
+      nextPin.latitude === latitude &&
+      nextPin.longitude === longitude &&
+      hasLocationParam &&
+      !params.has("q")
+    )
       return;
-    }
-    const params = new URLSearchParams();
-    if (newCat) params.set("category", newCat);
-    params.set("lat", newLat.toString());
-    params.set("lng", newLng.toString());
-    router.push(`/dashboard/customer/explore?${params.toString()}`);
-  };
+    startTransition(() =>
+      router.push(
+        exploreUrl(nextCategory, confirmedPin.current ? nextPin : undefined),
+        { scroll: false },
+      ),
+    );
+  }
+  useEffect(() => {
+    setSelected(category || "");
+  }, [category]);
 
   useEffect(() => {
-    if (hasLocationParam === false && "geolocation" in navigator) {
+    let cancelled = false;
+    if (hasLocationParam) {
+      confirmedPin.current = true;
+      const next = { latitude, longitude };
+      setPin(next);
+      remember(next);
+      setLocating(false);
+      return;
+    }
+    let previous: ExplorePin | null = null;
+    try {
+      previous = decodeExplorePin(localStorage.getItem(key));
+    } catch {
+      /* The URL and map remain usable when storage is unavailable. */
+    }
+    if (previous) {
+      confirmedPin.current = true;
+      setPin(previous);
+      setSaved(true);
+      startTransition(() =>
+        router.replace(exploreUrl(category || "", previous, query), {
+          scroll: false,
+        }),
+      );
+      return;
+    }
+    if ("geolocation" in navigator && !manualPin.current) {
+      setLocating(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          handleSearch(category || "", position.coords.latitude, position.coords.longitude);
+          if (cancelled || manualPin.current) return;
+          const next = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          };
+          confirmedPin.current = true;
+          setPin(next);
+          setLocating(false);
+          remember(next);
+          startTransition(() =>
+            router.replace(exploreUrl(category || "", next, query), {
+              scroll: false,
+            }),
+          );
         },
-        (error) => {
-          console.error("Error getting location:", error);
+        () => {
+          if (!cancelled) setLocating(false);
         },
-        { timeout: 10000, enableHighAccuracy: true }
+        { timeout: 10000, enableHighAccuracy: true },
       );
     }
-  }, [hasLocationParam]);
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    category,
+    hasLocationParam,
+    latitude,
+    longitude,
+    key,
+    router,
+    query,
+    remember,
+  ]);
 
   return (
-    <div className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200 flex flex-col gap-6">
-      <div className="flex flex-col md:flex-row gap-4 items-end">
-        <div className="flex-1 w-full">
-          <label className="block text-sm font-semibold text-stone-700 mb-1">หมวดหมู่งานซ่อม</label>
-          <select 
-            name="category" 
-            value={category || ""} 
-            onChange={(e) => handleSearch(e.target.value, latitude, longitude)}
-            className="w-full h-11 rounded-lg border border-stone-300 px-4 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white"
-          >
-            <option value="">-- บริการทั้งหมด --</option>
-            {categories.map(c => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
+    <div className="explore-filters" aria-busy={pending}>
+      <CategoryRail
+        categories={categories}
+        selected={selected}
+        onSelect={(next) => {
+          setSelected(next);
+          navigate(next, pin);
+        }}
+      />
+      <div className="explore-map-section">
+        <div className="explore-map-heading">
+          <h2>
+            <MapPin size={18} /> พื้นที่ที่ต้องการหาช่าง
+          </h2>
+          <span className="explore-pin-status">
+            {locating ? (
+              <>
+                <LoaderCircle size={14} className="spin" /> กำลังระบุตำแหน่ง
+              </>
+            ) : saved ? (
+              <>
+                <Check size={14} /> จำหมุดแล้ว
+              </>
+            ) : (
+              "ปักหมุดบนแผนที่"
+            )}
+          </span>
         </div>
-      </div>
-      
-      <div>
-        <label className="block text-sm font-semibold text-stone-700 mb-2">ระบุตำแหน่งของคุณบนแผนที่</label>
-        <MapPicker 
-          initialLat={latitude} 
-          initialLng={longitude} 
-          nameLat="lat" 
-          nameLng="lng" 
-          technicians={technicians} 
-          onPositionChange={(lat, lng) => handleSearch(category || "", lat, lng)}
+        <MapPicker
+          initialLat={pin.latitude}
+          initialLng={pin.longitude}
+          nameLat="lat"
+          nameLng="lng"
+          technicians={technicians}
+          onPositionChange={(lat, lng) => {
+            const next = { latitude: lat, longitude: lng };
+            manualPin.current = true;
+            confirmedPin.current = true;
+            setLocating(false);
+            setPin(next);
+            remember(next);
+            navigate(selected, next);
+          }}
         />
       </div>
+      <span className="sr-only" role="status">
+        {pending ? "กำลังอัปเดตช่างในพื้นที่" : "อัปเดตรายการช่างแล้ว"}
+      </span>
     </div>
   );
 }

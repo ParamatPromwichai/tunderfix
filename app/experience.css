@@ -1,0 +1,1051 @@
+/* Shared finishing layer; each workflow has an accent and its own surface treatment. */
+.dashboard-shell {
+  --view-accent: #b94b27;
+  --view-soft: #fcf0e7;
+  --view-line: #ecd5c5;
+}
+.dashboard-shell[data-view="explore"] {
+  --view-accent: #356b77;
+  --view-soft: #edf5f5;
+  --view-line: #cfe1e3;
+}
+.dashboard-shell[data-view="jobs"],
+.dashboard-shell[data-view="job-detail"],
+.dashboard-shell[data-view="services"] {
+  --view-accent: #4c6d39;
+  --view-soft: #eff4e9;
+  --view-line: #d6e2c9;
+}
+.dashboard-shell[data-view="chat"],
+.dashboard-shell[data-view="chat-room"] {
+  --view-accent: #4c667e;
+  --view-soft: #eef3f7;
+  --view-line: #d3dfe9;
+}
+.dashboard-shell[data-view="profile"] {
+  --view-accent: #865b43;
+  --view-soft: #f7f0e9;
+  --view-line: #e8d8c9;
+}
+.route-surface {
+  min-width: 0;
+  animation: route-arrive 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.is-overview .route-surface {
+  height: 100%;
+}
+.topbar-caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #64705b;
+}
+.context-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--view-accent);
+  border-radius: 3px;
+  transform: rotate(-12deg);
+}
+.workspace-sidebar {
+  background: linear-gradient(180deg, #fffef9 0%, #f5f7ee 100%);
+}
+.side-link {
+  position: relative;
+  transition:
+    background 0.18s,
+    color 0.18s,
+    transform 0.18s;
+}
+.side-link.active::before {
+  content: "";
+  width: 3px;
+  height: 20px;
+  border-radius: 4px;
+  background: currentColor;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.side-link:hover > svg {
+  transform: translateY(-2px);
+}
+.side-link > svg {
+  transition: transform 0.2s;
+}
+.sidebar-tip {
+  background: #eef2e5;
+  border: 1px solid #dfe6d4;
+  border-radius: 12px;
+  padding: 15px;
+}
+.sidebar-tip a > svg {
+  transition: transform 0.18s;
+}
+.sidebar-tip a:hover > svg {
+  transform: translate(2px, -2px);
+}
+
+/* Distinct page headings without adding another header to the page. */
+.ui-page-header,
+[data-view="services"] .route-surface > div > header,
+[data-view="job-detail"] .route-surface > div > header,
+[data-view="new-job"] .route-surface > div > header,
+[data-view="review"] .route-surface > div > header {
+  position: relative;
+  isolation: isolate;
+  padding: 25px 28px;
+  background: linear-gradient(110deg, #fffefa 35%, var(--view-soft));
+  border: 1px solid var(--view-line);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px #293b1e04;
+}
+.ui-page-header::before,
+[data-view="services"] .route-surface > div > header::before,
+[data-view="job-detail"] .route-surface > div > header::before {
+  content: "";
+  position: absolute;
+  top: 23px;
+  bottom: 23px;
+  left: 0;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: var(--view-accent);
+}
+.ui-page-header::after {
+  content: "";
+  position: absolute;
+  height: 95px;
+  width: 95px;
+  right: 38px;
+  top: -44px;
+  border: 18px solid var(--view-line);
+  border-radius: 25px;
+  transform: rotate(26deg);
+  opacity: 0.45;
+  z-index: -1;
+}
+.ui-page-header h1,
+[data-view="services"] .route-surface header h1 {
+  font-size: 24px;
+  font-weight: 650;
+  line-height: 1.5;
+  letter-spacing: -0.7px;
+}
+.ui-page-header p,
+[data-view="services"] .route-surface header p {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.ui-page-header > a,
+[data-view="services"] #add-service-btn {
+  background: var(--view-accent);
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px #293b1e12;
+}
+.ui-card {
+  border-radius: 14px;
+  box-shadow: 0 3px 12px #293b1e04;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+.ui-card-interactive {
+  position: relative;
+  overflow: hidden;
+}
+.ui-card-interactive::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--view-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.24s;
+}
+.ui-card-interactive:focus-within::before {
+  transform: scaleX(1);
+}
+.ui-card-interactive:focus-within {
+  box-shadow: 0 6px 20px #293b1e0b;
+}
+.ui-empty-state {
+  border: 1px solid var(--view-line);
+  border-radius: 16px;
+  background: linear-gradient(145deg, #fffefa, var(--view-soft));
+  padding-block: 42px;
+}
+.ui-empty-state > div:first-child:has(> svg) {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 19px;
+  background: #fffefa;
+  color: var(--view-accent);
+  box-shadow:
+    0 5px 0 var(--view-line),
+    0 12px 25px #293b1e08;
+  transform: rotate(-5deg);
+  margin-bottom: 22px;
+}
+.ui-empty-state > div:first-child > svg {
+  transform: rotate(5deg);
+}
+.ui-status {
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: #f5f5ef;
+}
+.ui-status[data-status="requested"],
+.ui-status[data-status="pending"],
+.ui-status[data-status="open"] {
+  background: #fff1e6;
+}
+.ui-status[data-status="accepted"] {
+  background: #edf4f8;
+}
+.ui-status[data-status="in_progress"],
+.ui-status[data-status="on_the_way"] {
+  background: #f0eef8;
+}
+.ui-status[data-status="completed"] {
+  background: #edf5e8;
+}
+.ui-status[data-status="cancelled"] {
+  background: #f2f1ee;
+}
+
+/* Search and status tabs operate on real records, preserving every job link. */
+.job-filter-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.job-filter-tabs {
+  display: flex;
+  gap: 5px;
+  padding: 5px;
+  background: #e9eee1;
+  border: 1px solid #dce4d2;
+  border-radius: 12px;
+}
+.job-filter-tabs button {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  padding: 9px 11px;
+  border-radius: 8px;
+  font-size: 11px;
+  color: #657557;
+  min-height: 38px;
+}
+.job-filter-tabs button > span {
+  display: grid;
+  place-items: center;
+  font-size: 9px;
+  min-width: 19px;
+  height: 19px;
+  padding-inline: 4px;
+  border-radius: 5px;
+  background: #dce6d1;
+}
+.job-filter-tabs button[aria-pressed="true"] {
+  background: #fffefa;
+  color: #354f29;
+  box-shadow: 0 2px 5px #2e421d10;
+  font-weight: 600;
+}
+.job-filter-tabs button[aria-pressed="true"] > span {
+  background: #415d30;
+  color: #fff;
+}
+.job-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+  min-width: 180px;
+  padding: 9px 12px;
+  min-height: 46px;
+  background: #fffefa;
+  border: 1px solid #dde4d3;
+  border-radius: 11px;
+  color: #748666;
+}
+.job-search input {
+  width: 100%;
+  min-width: 0;
+  outline: none;
+  background: transparent;
+  font-size: 12px;
+  color: #354f29;
+}
+.job-search:focus-within {
+  border-color: #789464;
+  box-shadow: 0 0 0 3px #647e4012;
+}
+.filter-result {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  color: #717e64;
+  padding-block: 14px;
+}
+.filter-result button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  color: #a34d29;
+  font-weight: 600;
+}
+.job-results-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.job-results-grid > div {
+  min-width: 0;
+  animation: card-arrive 0.22s ease-out both;
+}
+.job-results-grid .ui-card {
+  height: 100%;
+}
+.job-results-grid > div > a {
+  height: 100%;
+}
+.filter-empty {
+  text-align: center;
+  border: 1px dashed #cfdcc2;
+  border-radius: 13px;
+  padding: 38px 18px;
+  color: #698056;
+  background: #fafcf6;
+}
+.filter-empty svg {
+  margin: 0 auto 15px;
+}
+.filter-empty h2 {
+  font-size: 14px;
+  font-weight: 600;
+}
+.filter-empty p {
+  font-size: 11px;
+  margin-top: 8px;
+  color: #77846a;
+}
+
+/* Forms react to focus, with room to read labels and validation messages. */
+.route-surface
+  :where(
+    input:not([type="radio"]):not([type="checkbox"]):not([type="file"]):not(
+        [type="hidden"]
+      ),
+    textarea,
+    select
+  ) {
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s,
+    background 0.18s;
+}
+.route-surface
+  :where(
+    input:not([type="radio"]):not([type="checkbox"]):not([type="file"]):not(
+        [type="hidden"]
+      ),
+    textarea,
+    select
+  ):focus-visible {
+  border-color: var(--view-accent);
+  background-color: #fffefa;
+  box-shadow: 0 0 0 4px var(--view-soft);
+  outline: 2px solid var(--view-accent);
+  outline-offset: 2px;
+}
+.route-surface label:focus-within > span:first-child {
+  color: var(--view-accent);
+}
+.route-surface :where(button, a):active:not(:disabled) {
+  scale: 0.98;
+}
+.route-surface [role="alert"] {
+  animation: notice-arrive 0.24s ease-out;
+  border-left: 3px solid #b84d2e;
+}
+[data-view="profile"] .ui-card {
+  border-top: 3px solid #e4d0bc;
+  padding: 25px;
+}
+[data-view="profile"] .ui-card:first-of-type {
+  background: linear-gradient(120deg, #fffefa 60%, #f4eadd);
+  border-top-color: #b38a60;
+}
+[data-view="profile"] .ui-card h2 {
+  color: #684e37;
+}
+[data-view="profile"] .ui-card > .flex:first-child {
+  align-items: center;
+}
+[data-view="profile"] form > button[type="submit"] {
+  position: sticky;
+  bottom: 18px;
+  margin-left: auto;
+  box-shadow: 0 5px 18px #633c2524;
+  border-radius: 11px;
+  min-height: 45px;
+}
+[data-view="profile"] .route-surface img {
+  outline: 1px solid #e3cfb8;
+  outline-offset: 4px;
+}
+[data-view="explore"] .route-surface .ui-card {
+  border-top: 2px solid #d0e1e2;
+}
+[data-view="explore"] .route-surface .ui-card img {
+  border-radius: 13px;
+  box-shadow: 0 3px 7px #345c6010;
+}
+[data-view="explore"] .route-surface > div > div:has(.leaflet-container) {
+  border: 1px solid #d2e1e2;
+  background: #f8fbfa;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px #345c6005;
+}
+[data-view="explore"] .home-search {
+  border-color: #d6e3e1;
+  background: #fff;
+  border-radius: 10px;
+}
+[data-view="explore"] .home-search button {
+  background: #396b75;
+  border-radius: 7px;
+}
+[data-view="new-job"] .route-surface form {
+  border-radius: 17px;
+  box-shadow: 0 6px 24px #73412107;
+  border-color: #ead9ca;
+}
+[data-view="new-job"] .route-surface > div > header {
+  padding: 23px;
+  background: #fff8ef;
+}
+[data-view="new-job"] .route-surface header > div:first-child {
+  border-radius: 17px;
+  background: #be411e;
+  color: white;
+  box-shadow: 0 5px 0 #f1d8c6;
+}
+[data-view="new-job"] .route-surface header h1 {
+  font-size: 26px;
+}
+[data-view="new-job"] .route-surface form label {
+  color: #695744;
+}
+[data-view="job-detail"] .route-surface > div > header {
+  border-color: #dce5d1;
+  box-shadow: 0 3px 15px #3b542106;
+}
+[data-view="job-detail"] .route-surface > div > header h1 {
+  font-size: 26px;
+  font-weight: 650;
+  white-space: normal;
+}
+[data-view="job-detail"] .route-surface [class*="rounded-3xl"] {
+  border-radius: 14px;
+  border-color: #e2e7d9;
+  box-shadow: 0 3px 15px #3b542106;
+}
+.job-journey {
+  background: linear-gradient(110deg, #fffefa, #f3f7ec);
+  border-color: #dce6ce;
+  border-radius: 14px;
+}
+.job-journey li.done > span {
+  box-shadow: 0 0 0 4px #dfeace55;
+}
+.job-journey li[aria-current="step"] > span {
+  background: #466536;
+  color: white;
+}
+[data-view="review"] .route-surface > div {
+  margin-top: 0;
+}
+[data-view="review"] .route-surface > div > header {
+  margin-bottom: 20px;
+  background: linear-gradient(145deg, #fffaf0, #f9e6cf);
+}
+[data-view="review"] .route-surface form {
+  border-radius: 16px;
+  box-shadow: 0 5px 20px #a0642308;
+}
+[data-view="review"] button[aria-pressed="true"] svg {
+  filter: drop-shadow(0 3px 2px #d18a3624);
+}
+[data-view="review"] button[aria-pressed="true"]:active svg {
+  animation: star-pop 0.25s ease-out;
+}
+
+/* Service editing and messages are tools, with their own visual rhythm. */
+.service-tile {
+  border-radius: 15px;
+  border-top: 3px solid #ccdbbc;
+  box-shadow: 0 4px 14px #31441f05;
+}
+.service-tile > div:last-child {
+  background: #f6f8f1;
+  margin: 16px -16px -16px;
+  padding: 14px 16px;
+  border-radius: 0 0 15px 15px;
+}
+.service-tile > div:first-child > div:first-child {
+  background: #edf4e4;
+  color: #526b3b;
+  border-radius: 12px;
+}
+.service-tile button {
+  opacity: 1;
+  min-width: 36px;
+  min-height: 36px;
+}
+.service-editor {
+  border-color: #7b9663;
+  border-radius: 15px;
+  background: #fcfef8;
+  animation: card-arrive 0.2s ease-out;
+}
+[data-view="services"] [role="dialog"] {
+  border-radius: 20px;
+  animation: modal-arrive 0.25s ease-out;
+}
+[data-view="services"] [role="dialog"] > div:nth-child(2) {
+  background: linear-gradient(110deg, #fffefa, #eef4e7);
+  padding-bottom: 18px;
+}
+/* showModal() puts the service form above the header's isolated stacking context. */
+.service-add-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: calc(100% - 32px);
+  max-width: 28rem;
+  max-height: calc(100dvh - 48px);
+  padding: 0;
+  border: 1px solid #dfe5d5;
+  color: var(--ink);
+  overscroll-behavior: contain;
+}
+.service-add-dialog::backdrop {
+  background: #1c251db3;
+  backdrop-filter: blur(4px);
+}
+.service-add-dialog .service-modal-heading {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-bottom: 1px solid #e9ede2;
+}
+.service-add-dialog input[name="name"] {
+  min-width: 0;
+}
+@media (max-width: 700px) {
+  [data-view="services"] .service-add-dialog {
+    inset: auto 0 0;
+    margin: 0;
+    width: 100%;
+    max-width: none;
+    max-height: calc(100dvh - 16px);
+    border-radius: 20px 20px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+[data-view="requests"] .ui-card {
+  border-left: 3px solid #d79660;
+}
+[data-view="chat"] .ui-card {
+  border-radius: 16px;
+}
+[data-view="chat"] .ui-card > a {
+  position: relative;
+  padding: 21px;
+  transition: background 0.18s;
+}
+[data-view="chat"] .ui-card > a::after {
+  content: "›";
+  margin-left: 8px;
+  color: #8b9eb0;
+  font-size: 23px;
+  font-family: sans-serif;
+  transition: transform 0.2s;
+}
+[data-view="chat"] .ui-card > a:hover::after {
+  transform: translateX(3px);
+}
+[data-view="chat"] .ui-card > a > div:first-child {
+  border-radius: 15px;
+  background: #eaf0f5;
+  color: #506f89;
+}
+.conversation {
+  border-radius: 17px;
+  box-shadow: 0 5px 23px #334e6408;
+  border-color: #d8e2e9;
+}
+.conversation > header {
+  background: #f3f7f9;
+  border-bottom-color: #dae4eb;
+  padding: 19px 22px;
+}
+.conversation > header button {
+  background: white;
+  border-radius: 11px;
+  padding: 8px;
+  box-shadow: 0 2px 5px #29435c08;
+}
+.conversation > .overflow-y-auto {
+  background-color: #f5f7f8;
+  background-image: radial-gradient(#96afc12b 0.7px, transparent 0.7px);
+  background-size: 17px 17px;
+}
+.chat-bubble {
+  border-radius: 17px;
+  font-size: 14px;
+  line-height: 1.8;
+  box-shadow: 0 2px 5px #29435c08;
+}
+.chat-bubble[data-outgoing="true"] {
+  background: #42677e;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.chat-bubble[data-outgoing="false"] {
+  background: #fffefa;
+  border-color: #dce4e9;
+  border-bottom-left-radius: 4px;
+}
+.chat-bubble[data-outgoing="true"] > p:last-child {
+  color: #dce8f0;
+}
+.conversation form input {
+  background: #f5f8fa;
+  border-color: #d6e1e7;
+  border-radius: 12px;
+}
+.conversation form button[type="submit"] {
+  background: #42677e;
+  color: white;
+  border-radius: 12px;
+  min-width: 64px;
+}
+.conversation form button[type="submit"]:hover:not(:disabled) {
+  background: #304e62;
+}
+.conversation form button[type="submit"]:disabled {
+  cursor: not-allowed;
+}
+.urgent-workspace > .page-heading {
+  border-bottom: 1px solid #e8d9c9;
+  padding-bottom: 20px;
+}
+.dispatch-form.panel {
+  border-radius: 15px;
+  border-color: #ead8c8;
+  box-shadow: 0 5px 24px #82442107;
+}
+.dispatch-form .section-number > span {
+  background: #fff2e5;
+  border: 1px solid #f0d8bd;
+  color: #a66434;
+  border-radius: 9px;
+}
+.urgent-job {
+  border-radius: 15px;
+  border-top: 3px solid #d89764;
+  box-shadow: 0 3px 15px #82442106;
+}
+.tracking-job {
+  border-radius: 15px;
+  box-shadow: 0 3px 15px #82442106;
+}
+.offer-row {
+  transition: background 0.2s;
+  border-radius: 9px;
+  padding-inline: 10px;
+}
+.offer-row:hover {
+  background: #f9faf5;
+}
+.availability-bar {
+  border-radius: 15px;
+  transition:
+    background 0.25s,
+    border-color 0.25s;
+}
+.availability-bar.is-online {
+  border-color: #abc593;
+}
+.availability-bar.is-online .availability-icon {
+  box-shadow: 0 0 0 5px #bdd5a63d;
+}
+.offer-sent {
+  animation: notice-arrive 0.2s ease-out;
+}
+.toggle-track > span {
+  transition: transform 0.2s;
+}
+
+/* Public and authentication screens receive the same tactile feedback. */
+.home-faq details[open] p {
+  animation: notice-arrive 0.22s ease-out;
+}
+.home-faq details[open] summary {
+  color: var(--orange);
+}
+.home-faq summary {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+.home-faq summary::-webkit-details-marker {
+  display: none;
+}
+.home-faq summary::after {
+  content: "+";
+  color: #8b977b;
+  font: 400 21px/1 var(--font-sans);
+}
+.home-faq details[open] summary::after {
+  content: "−";
+  color: var(--orange);
+}
+.auth-form-panel {
+  animation: route-arrive 0.3s ease-out;
+}
+.auth-fields .field:focus-within {
+  color: var(--orange);
+}
+.role-choice > label {
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    box-shadow 0.2s;
+}
+.role-choice > label.selected {
+  box-shadow: 0 0 0 3px #be411e08;
+}
+.interaction-ring {
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  z-index: 1000;
+  border: 1.5px solid #b75c35a0;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: tap-feedback 0.45s ease-out forwards;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ui-card-interactive:hover,
+  .service-tile:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 25px #293b1e0d;
+  }
+  .ui-card-interactive:hover::before {
+    transform: scaleX(1);
+  }
+  .route-surface .button:hover > svg:last-child,
+  .hero-urgent-button:hover > svg:last-child {
+    transform: translate(2px, -2px);
+  }
+  .route-surface .button > svg:last-child,
+  .hero-urgent-button > svg:last-child {
+    transition: transform 0.2s;
+  }
+  .urgent-job:hover {
+    border-top-color: #ba5c2e;
+    box-shadow: 0 8px 23px #8244210b;
+  }
+  .role-choice > label:hover {
+    border-color: #c18f72;
+  }
+}
+@keyframes route-arrive {
+  from {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes card-arrive {
+  from {
+    opacity: 0.6;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes notice-arrive {
+  from {
+    opacity: 0.5;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes modal-arrive {
+  from {
+    opacity: 0.4;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes star-pop {
+  50% {
+    transform: scale(1.15) rotate(-6deg);
+  }
+}
+@keyframes tap-feedback {
+  to {
+    opacity: 0;
+    transform: scale(2.8);
+  }
+}
+@media (max-width: 700px) {
+  .ui-page-header,
+  [data-view="services"] .route-surface > div > header,
+  [data-view="job-detail"] .route-surface > div > header {
+    padding: 19px 19px 18px;
+    border-radius: 13px;
+  }
+  .ui-page-header h1,
+  [data-view="services"] .route-surface header h1 {
+    font-size: 21px;
+  }
+  .ui-page-header p,
+  [data-view="services"] .route-surface header p {
+    font-size: 11px;
+  }
+  .ui-page-header::after {
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    border-width: 12px;
+    top: -32px;
+  }
+  .ui-card {
+    border-radius: 12px;
+  }
+  .ui-empty-state {
+    padding: 30px 18px;
+  }
+  .job-filter-toolbar {
+    gap: 10px;
+  }
+  .job-filter-tabs {
+    width: 100%;
+    gap: 2px;
+    padding: 4px;
+  }
+  .job-filter-tabs button {
+    flex: 1;
+    justify-content: center;
+    padding: 8px 4px;
+    font-size: 9px;
+    gap: 4px;
+  }
+  .job-filter-tabs button > span {
+    min-width: 16px;
+    height: 17px;
+    font-size: 8px;
+  }
+  .job-search {
+    width: 100%;
+    min-height: 43px;
+  }
+  .job-search input {
+    font-size: 16px;
+  }
+  .job-search input::placeholder {
+    font-size: 12px;
+  }
+  .job-results-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .filter-result {
+    padding-block: 11px;
+  }
+  .route-surface
+    :where(
+      input:not([type="radio"]):not([type="checkbox"]):not([type="file"]):not(
+          [type="hidden"]
+        ),
+      textarea
+    ) {
+    font-size: 16px;
+  }
+  [data-view="profile"] .ui-card {
+    padding: 21px 18px;
+  }
+  [data-view="profile"] .ui-card > .flex:first-child {
+    flex-direction: row;
+    gap: 17px;
+    text-align: left;
+  }
+  [data-view="profile"] .ui-card img {
+    width: 67px;
+    height: 67px;
+  }
+  [data-view="profile"] .ui-card h2 {
+    font-size: 14px;
+  }
+  [data-view="profile"] .ui-card > .flex:first-child p {
+    font-size: 10px;
+    line-height: 1.8;
+  }
+  [data-view="profile"] .ui-card > .flex:first-child button {
+    font-size: 10px;
+    padding: 8px;
+  }
+  [data-view="profile"] form > button[type="submit"] {
+    bottom: calc(91px + env(safe-area-inset-bottom));
+    border: 3px solid #fff;
+  }
+  [data-view="new-job"] .route-surface > div {
+    padding-inline: 0;
+    padding-top: 0;
+  }
+  [data-view="new-job"] .route-surface header h1 {
+    font-size: 23px;
+  }
+  [data-view="job-detail"] .route-surface > div > header h1 {
+    font-size: 22px;
+  }
+  [data-view="job-detail"] .route-surface [class*="rounded-3xl"] {
+    border-radius: 12px;
+  }
+  [data-view="job-detail"] .route-surface [class*="p-8"] {
+    padding: 20px;
+  }
+  [data-view="review"] .route-surface > div > header {
+    padding: 22px 18px;
+  }
+  [data-view="review"] .route-surface header h1 {
+    font-size: 21px;
+  }
+  [data-view="review"] .route-surface header p {
+    font-size: 11px;
+    line-height: 1.8;
+  }
+  [data-view="review"] .route-surface form {
+    padding: 24px 18px;
+  }
+  [data-view="review"] button svg {
+    width: 39px;
+    height: 39px;
+  }
+  [data-view="chat"] .ui-card > a {
+    padding: 17px;
+  }
+  [data-view="chat-room"] .workspace-content {
+    padding-top: 12px;
+    padding-bottom: 99px;
+  }
+  .conversation {
+    height: calc(100dvh - 177px - env(safe-area-inset-bottom));
+    min-height: 320px;
+    max-height: none;
+    border-radius: 14px;
+  }
+  .conversation > header {
+    padding: 13px 12px;
+  }
+  .conversation > header > div {
+    gap: 9px;
+    min-width: 0;
+  }
+  .conversation > header h2 {
+    font-size: 13px;
+  }
+  .conversation > header p {
+    font-size: 10px;
+  }
+  .conversation > .overflow-y-auto {
+    padding: 17px 12px;
+  }
+  .chat-bubble {
+    max-width: 88%;
+    padding: 10px 13px;
+    font-size: 13px;
+  }
+  .conversation > div:last-child {
+    padding: 11px;
+  }
+  .conversation form {
+    gap: 8px;
+  }
+  .conversation form input {
+    min-width: 0;
+    width: 0;
+    font-size: 16px;
+    height: 44px;
+    padding-inline: 11px;
+  }
+  .conversation form input::placeholder {
+    font-size: 12px;
+  }
+  .conversation form button[type="submit"] {
+    height: 44px;
+    padding-inline: 15px;
+    min-width: 57px;
+    font-size: 12px;
+  }
+  .dispatch-form.panel {
+    padding: 22px 17px;
+  }
+  .urgent-workspace > .page-heading {
+    padding-bottom: 16px;
+  }
+  .interaction-ring {
+    width: 15px;
+    height: 15px;
+    margin: -7.5px 0 0 -7.5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .route-surface,
+  .job-results-grid > div,
+  .service-editor,
+  .route-surface [role="dialog"],
+  .route-surface [role="alert"],
+  .auth-form-panel {
+    animation: none;
+  }
+  .interaction-ring {
+    display: none;
+  }
+  .ui-card-interactive:hover,
+  .service-tile:hover {
+    transform: none;
+  }
+}

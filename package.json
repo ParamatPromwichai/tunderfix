@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:migrate:dispatch": "node --env-file=.env scripts/migrate-dispatch.mjs",
+    "test:dispatch": "node --env-file=.env scripts/qa-dispatch.mjs"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

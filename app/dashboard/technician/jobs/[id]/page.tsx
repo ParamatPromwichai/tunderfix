@@ -5,6 +5,9 @@ import { getJobDetails } from "@/services/jobs.service";
 import { getActiveUserById } from "@/services/auth.service";
 import { getTechnicianRequests } from "@/services/job-requests.service";
 import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
+import { db } from "@/lib/db";
+import type { RowDataPacket } from "mysql2";
+import { JobJourney } from "@/components/JobJourney";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +31,8 @@ export default async function TechnicianJobDetailsPage({ params }: { params: Pro
     return <div className="p-12 text-center text-stone-500 font-medium">ไม่พบข้อมูลงานซ่อมนี้</div>;
   }
 
-  // Ensure this tech is assigned to this job, or it's open (for quotes).
+  const [urgent] = await db.execute<RowDataPacket[]>(`SELECT job_id FROM urgent_dispatch WHERE job_id = ?`, [id]);
+  if (job.technicianId !== tokenUser.userId && (urgent.length || job.status !== "requested" || job.technicianId)) redirect("/dashboard/technician/urgent");
   
   const customer = await getActiveUserById(job.customerId);
   const techRequests = await getTechnicianRequests(tokenUser.userId);
@@ -59,6 +63,7 @@ export default async function TechnicianJobDetailsPage({ params }: { params: Pro
         </Link>
       </header>
 
+      <JobJourney jobId={job.id} status={job.status} technician={job.technicianId === tokenUser.userId} />
       <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6 order-2 lg:order-1 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
           <div className="bg-white rounded-3xl shadow-lg shadow-amber-900/5 border border-amber-100 overflow-hidden">

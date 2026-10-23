@@ -2,11 +2,13 @@ import { NextResponse } from "next/server";
 import { getAuthUserFromCookies } from "@/lib/auth";
 import { sendJobRequest } from "@/services/job-requests.service";
 import { getJobDetails } from "@/services/jobs.service";
+import { db } from "@/lib/db";
+import type { RowDataPacket } from "mysql2";
 
 export async function POST(request: Request) {
   try {
     const tokenUser = await getAuthUserFromCookies();
-    if (!tokenUser) {
+    if (!tokenUser || tokenUser.role !== "technician") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -18,6 +20,9 @@ export async function POST(request: Request) {
     if (!jobId) {
       return NextResponse.redirect(new URL("/dashboard/technician/explore", request.url), 303);
     }
+
+    const [urgent] = await db.execute<RowDataPacket[]>(`SELECT job_id FROM urgent_dispatch WHERE job_id = ?`, [jobId]);
+    if (urgent.length) return NextResponse.redirect(new URL("/dashboard/technician/urgent", request.url), 303);
 
     const job = await getJobDetails(jobId);
     if (!job || job.status !== 'requested') {
